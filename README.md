@@ -9,7 +9,7 @@ This package gives you tools for [etten/sandbox](https://github.com/etten/sandbo
 * Additional configuration of `Nette\Configurator` can be given by an Extension and not directly in a long boostrap PHP file.
 * See an example bellow.
 
-	```
+	```php
 	<?php
 	// app/bootstrap.php
 	
@@ -38,7 +38,7 @@ This package gives you tools for [etten/sandbox](https://github.com/etten/sandbo
 	return $app;
 	```
 
-	```
+	```yaml
 	# app/config/bootstrap.neon
 
 	parameters:
@@ -62,7 +62,7 @@ This package gives you tools for [etten/sandbox](https://github.com/etten/sandbo
 * In ideal situation it should be configured as-in a real application.
 * With this packages you can create testing bootstrap file like bellow.
 
-	```
+	```php
 	<?php
 	// tests/boostrap.php
     
@@ -83,7 +83,7 @@ This package gives you tools for [etten/sandbox](https://github.com/etten/sandbo
     Etten\App\Tests\ContainerTestCase::$app = $app;
 	```
 
-	```
+	```yaml
 	# tests/bootstrap.neon
 
 	parameters:
@@ -113,7 +113,7 @@ This package gives you tools for [etten/sandbox](https://github.com/etten/sandbo
 * You can test them easily if you extend you TestCase by `\Etten\App\Tests\PresenterTestCase`.
 * Sample test may look like code bellow.
 
-	```
+	```php
 	<?php
     
     namespace Tests;

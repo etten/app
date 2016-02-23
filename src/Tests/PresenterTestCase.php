@@ -7,7 +7,7 @@ use Nette;
 /**
  * @property-read Nette\Application\IPresenter $presenter
  */
-abstract class PresenterContainerTestCase extends ContainerTestCase
+abstract class PresenterTestCase extends ContainerTestCase
 {
 
 	/** @var Nette\Application\IPresenter */

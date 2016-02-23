@@ -5,7 +5,10 @@ namespace Etten\App\Tests;
 use Etten;
 use Nette;
 
-abstract class TestCase extends \PHPUnit_Framework_TestCase
+/**
+ * @property-read Nette\DI\Container $container
+ */
+abstract class ContainerTestCase extends \PHPUnit_Framework_TestCase
 {
 
 	/** @var Etten\App\App */
@@ -14,7 +17,17 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 	/** @var Nette\DI\Container */
 	private $container;
 
-	protected function getContainer():Nette\DI\Container
+	public function __get($name)
+	{
+		$getter = 'get' . ucfirst($name);
+		if (method_exists($this, $getter)) {
+			return $getter;
+		}
+
+		throw new \RuntimeException(sprintf('Property %s does not found.', $name));
+	}
+
+	public function getContainer():Nette\DI\Container
 	{
 		if (!$this->container) {
 			$this->container = $this->createContainer();

@@ -4,28 +4,35 @@ namespace Etten\App\Tests;
 
 use Nette;
 
-abstract class PresenterTestCase extends TestCase
+/**
+ * @property-read Nette\Application\IPresenter $presenter
+ */
+abstract class PresenterContainerTestCase extends ContainerTestCase
 {
 
 	/** @var Nette\Application\IPresenter */
-	protected $presenter;
+	private $presenter;
 
 	/**
 	 * @return string Fully Qualified Presenter name (Front:Homepage)
 	 */
 	abstract protected function getPresenterName():string;
 
-	protected function setUp()
+	public function getPresenter():Nette\Application\IPresenter
 	{
-		parent::setUp();
+		if (!$this->presenter) {
+			$this->presenter = $this->getPresenterFactory()
+				->createPresenter($this->getPresenterName());
 
-		$this->presenter = $this->getPresenterFactory()
-			->createPresenter($this->getPresenterName());
+			if ($this->presenter instanceof Nette\Application\UI\Presenter) {
+				$this->presenter->autoCanonicalize = FALSE;
+			}
+		}
 
-		$this->presenter->autoCanonicalize = FALSE;
+		return $this->presenter;
 	}
 
-	protected function runPresenter(
+	public function runPresenter(
 		string $method = 'GET',
 		array $params = [],
 		array $post = [],
@@ -34,11 +41,10 @@ abstract class PresenterTestCase extends TestCase
 	):Nette\Application\IResponse
 	{
 		$request = new Nette\Application\Request($this->getPresenterName(), $method, $params, $post, $files, $flags);
-
-		return $this->presenter->run($request);
+		return $this->getPresenter()->run($request);
 	}
 
-	protected function runSignal(
+	public function runSignal(
 		string $name,
 		string $method = 'GET',
 		array $params = [],
@@ -48,7 +54,7 @@ abstract class PresenterTestCase extends TestCase
 		return $this->runPresenter($method, ['do' => $name] + $params, $post);
 	}
 
-	protected function runAction(
+	public function runAction(
 		string $action = 'default',
 		string $method = 'GET',
 		array $params = [],
@@ -63,8 +69,7 @@ abstract class PresenterTestCase extends TestCase
 	 */
 	private function getPresenterFactory()
 	{
-		return $this
-			->getContainer()
+		return $this->container
 			->getByType(Nette\Application\IPresenterFactory::class);
 	}
 

@@ -72,15 +72,17 @@ This package gives you tools for [etten/sandbox](https://github.com/etten/sandbo
     
     /** @var Etten\App\App $app */
     $app = require __DIR__ . '/../app/bootstrap.php';
-    
+	
+    // Store created App instance for TestCase which provides Nette\DI\Container instance
+    Etten\App\Tests\ContainerTestCase::$app = $app;
+	
     // Set additional bootstrap configuration
     $app->addBootstrapFile(__DIR__ . '/bootstrap.neon');
     
     // Rewrite "local" configuration file (we don't need exactly the same DB, cache, ...)
     $app->addConfigFile(__DIR__ . '/config.local.neon', 'local');
-    
-    // Store created App instance for TestCase which provides Nette\DI\Container instance
-    Etten\App\Tests\ContainerTestCase::$app = $app;
+	
+    return $app;
 	```
 
 	```yaml

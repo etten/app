@@ -8,7 +8,7 @@ use Nette;
 /**
  * @property-read ORM\EntityManager $em
  */
-class DoctrineTestCase extends ContainerTestCase
+abstract class DoctrineTestCase extends ContainerTestCase
 {
 
 	/** @var ORM\EntityManager */

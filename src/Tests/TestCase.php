@@ -2,7 +2,7 @@
 
 namespace Etten\App\Tests;
 
-class TestCase extends \PHPUnit_Framework_TestCase
+abstract class TestCase extends \PHPUnit_Framework_TestCase
 {
 
 	public function __get($name)

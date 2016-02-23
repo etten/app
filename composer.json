@@ -2,6 +2,7 @@
     "name": "etten/app",
     "description": "Etten\\App",
     "license": "MIT",
+    "keywords": ["nette", "bootstrap", "application"],
     "authors": [
         {
             "name": "Jaroslav Hranička",

@@ -41,16 +41,14 @@ class App
 		$this->rootDir = $rootDir;
 	}
 
-	public function addBootstrapFile(string $file):App
+	public function addBootstrapFile(string $file, string $name = ''):App
 	{
-		$this->bootstrapFiles[] = $file;
-		return $this;
+		return $this->addFile($this->bootstrapFiles, $file, $name);
 	}
 
-	public function addConfigFile(string $file):App
+	public function addConfigFile(string $file, string $name = ''):App
 	{
-		$this->configFiles[] = $file;
-		return $this;
+		return $this->addFile($this->configFiles, $file, $name);
 	}
 
 	public function addExtension(AppExtension $extension):App
@@ -83,6 +81,17 @@ class App
 			->createContainer()
 			->getByType(Nette\Application\Application::class)
 			->run();
+	}
+
+	private function addFile(& $array, $file, $name):App
+	{
+		if ($name) {
+			$array[$name] = $file;
+		} else {
+			$array[] = $file;
+		}
+
+		return $this;
 	}
 
 	private function load()

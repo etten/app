@@ -24,6 +24,15 @@ class DoctrineTestCase extends ContainerTestCase
 		return $this->em;
 	}
 
+	protected function loadFixture(string $file)
+	{
+		$this->dropDatabase();
+
+		$connection = $this->getEm()->getConnection();
+		$statement = $connection->prepare(file_get_contents($file));
+		$statement->execute();
+	}
+
 	protected function tearDown()
 	{
 		parent::tearDown();
@@ -31,6 +40,12 @@ class DoctrineTestCase extends ContainerTestCase
 		if ($this->em) {
 			$this->em->clear();
 		}
+	}
+
+	private function dropDatabase()
+	{
+		$schemaTool = new ORM\Tools\SchemaTool($this->getEm());
+		$schemaTool->dropDatabase();
 	}
 
 }

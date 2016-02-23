@@ -29,7 +29,7 @@ class DoctrineTestCase extends ContainerTestCase
 		parent::tearDown();
 
 		if ($this->em) {
-			$this->em->close();
+			$this->em->clear();
 		}
 	}
 

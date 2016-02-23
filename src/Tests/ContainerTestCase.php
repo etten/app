@@ -8,43 +8,38 @@ use Nette;
 /**
  * @property-read Nette\DI\Container $container
  */
-abstract class ContainerTestCase extends \PHPUnit_Framework_TestCase
+abstract class ContainerTestCase extends TestCase
 {
 
 	/** @var Etten\App\App */
 	public static $app;
 
 	/** @var Nette\DI\Container */
-	private $container;
+	private static $container;
 
-	public function __get($name)
+	public static function setUpBeforeClass()
 	{
-		$getter = 'get' . ucfirst($name);
-		if (method_exists($this, $getter)) {
-			return $getter;
-		}
+		parent::setUpBeforeClass();
 
-		throw new \RuntimeException(sprintf('Property %s does not found.', $name));
+		if (!self::$container) {
+			self::$container = self::createContainer();
+		}
 	}
 
 	public function getContainer():Nette\DI\Container
 	{
-		if (!$this->container) {
-			$this->container = $this->createContainer();
-		}
-
-		return $this->container;
+		return self::$container;
 	}
 
-	private function createContainer():Nette\DI\Container
+	private static function createContainer():Nette\DI\Container
 	{
 		// Suppress DIC warnings (headers already sent etc.).
-		return $this->ignoreWarnings(function () {
+		return self::ignoreWarnings(function () {
 			return self::$app->createContainer();
 		});
 	}
 
-	private function ignoreWarnings(callable $callback)
+	private static function ignoreWarnings(callable $callback)
 	{
 		$errorReporting = error_reporting(E_ERROR);
 		$result = call_user_func($callback);

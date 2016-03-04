@@ -11,7 +11,12 @@ class Locker
 {
 
 	/** @var string */
-	public $lockFile = '../temp/.maintenance-lock';
+	private $lockFile;
+
+	public function __construct($lockFile = '../temp/.maintenance-lock')
+	{
+		$this->lockFile = $lockFile;
+	}
 
 	public function isLocked()
 	{

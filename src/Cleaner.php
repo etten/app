@@ -7,22 +7,31 @@
 
 namespace Etten\App;
 
+use Nette\Caching;
+use Nette\DI;
+
 class Cleaner
 {
 
 	/** @var string[] */
-	private $files = [];
+	public $files = [
+		'../temp/cache/Nette.Configurator',
+	];
 
-	public function __construct(array $files)
+	/** @var App */
+	private $app;
+
+	public function __construct(App $app)
 	{
-		$this->files = $files;
+		$this->app = $app;
 	}
 
 	public function clean()
 	{
 		$this->cleanApc();
 		$this->cleanApcu();
-		$this->cleanFiles();
+		$this->cleanFiles($this->files);
+		$this->cleanStorage($this->app->createContainer());
 	}
 
 	private function cleanApc()
@@ -40,14 +49,14 @@ class Cleaner
 		}
 	}
 
-	private function cleanFiles()
+	private function cleanFiles(array $files)
 	{
-		foreach ($this->files as $file) {
+		foreach ($files as $file) {
 			$this->deleteFile($file);
 		}
 	}
 
-	private function deleteFile($path)
+	private function deleteFile(string $path)
 	{
 		if (is_file($path)) {
 			unlink($path);
@@ -57,6 +66,16 @@ class Cleaner
 				$this->deleteFile($item);
 			}
 		}
+	}
+
+	private function cleanStorage(DI\Container $container)
+	{
+		/** @var Caching\IStorage $storage */
+		$storage = $container->getByType(Caching\IStorage::class);
+
+		$storage->clean([
+			Caching\Cache::ALL => TRUE,
+		]);
 	}
 
 }

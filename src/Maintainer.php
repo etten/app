@@ -22,9 +22,6 @@ class Maintainer
 		'::1',
 	];
 
-	/** @var \Closure[][] */
-	public $jobs = [[]];
-
 	/** @var string */
 	public $deploymentUrlRegExp = '';
 
@@ -37,13 +34,13 @@ class Maintainer
 		$this->parameters = $parameters ?: $_GET;
 	}
 
-	public function run()
+	public function isJob(string $name):bool
 	{
 		if ($this->isDeveloper() && $this->isDeployment()) {
-			foreach ($this->getJobs() as $job) {
-				$job($this);
-			}
+			return $name === $this->getCurrentJob();
 		}
+
+		return FALSE;
 	}
 
 	public function isDeveloper():bool
@@ -56,14 +53,9 @@ class Maintainer
 		return preg_match('~' . $this->deploymentUrlRegExp . '~', $this->server['REQUEST_URI']);
 	}
 
-	private function getJobs()
+	private function getCurrentJob():string
 	{
-		return $this->jobs[$this->getJobName()];
-	}
-
-	private function getJobName():string
-	{
-		return $this->parameters[$this->deploymentJobParameter];
+		return $this->parameters[$this->deploymentJobParameter] ?? '';
 	}
 
 }

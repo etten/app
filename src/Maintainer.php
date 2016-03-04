@@ -10,47 +10,33 @@ namespace Etten\App;
 class Maintainer
 {
 
-	/** @var array */
-	public $server = [];
-
-	/** @var array */
-	public $parameters = [];
-
 	/** @var string[] */
-	public $developers = [
-		'127.0.0.1',
-		'::1',
-	];
+	private $developers = [];
+
+	/** @var array */
+	private $server = [];
+
+	/** @var array */
+	private $parameters = [];
 
 	/** @var string */
-	public $deploymentUrlRegExp = '';
+	private $deploymentJobParameter = 'etten-maintainer-job';
 
-	/** @var string */
-	public $deploymentJobParameter = 'etten-maintainer-job';
-
-	public function __construct(array $server = [], array $parameters = [])
+	public function __construct(array $developers = [], array $server = [], array $parameters = [])
 	{
+		$this->developers = $developers;
 		$this->server = $server ?: $_SERVER;
 		$this->parameters = $parameters ?: $_GET;
 	}
 
 	public function isJob(string $name):bool
 	{
-		if ($this->isDeveloper() && $this->isDeployment()) {
-			return $name === $this->getCurrentJob();
-		}
-
-		return FALSE;
+		return $this->isDeveloper() && $name === $this->getCurrentJob();
 	}
 
-	public function isDeveloper():bool
+	private function isDeveloper():bool
 	{
 		return in_array($this->server['REMOTE_ADDR'], $this->developers);
-	}
-
-	public function isDeployment():bool
-	{
-		return preg_match('~' . $this->deploymentUrlRegExp . '~', $this->server['REQUEST_URI']);
 	}
 
 	private function getCurrentJob():string

@@ -36,6 +36,12 @@ class App
 	/** @var AppExtension[] */
 	private $extensions = [];
 
+	/** @var bool */
+	private $loaded = FALSE;
+
+	/** @var Maintainer|null */
+	private $maintainer;
+
 	public function __construct(string $rootDir)
 	{
 		$this->rootDir = $rootDir;
@@ -57,10 +63,13 @@ class App
 		return $this;
 	}
 
+	public function isMaintainerJob(string $name):bool
+	{
+		return $this->getMaintainer()->isJob($name);
+	}
+
 	public function createContainer():Nette\DI\Container
 	{
-		$this->load();
-
 		$configurator = $this->createConfigurator();
 
 		$configurator->onCompile[] = function (Nette\Configurator $sender, Nette\DI\Compiler $compiler) {
@@ -94,8 +103,22 @@ class App
 		return $this;
 	}
 
+	private function getMaintainer():Maintainer
+	{
+		if (!$this->maintainer) {
+			$this->load();
+			$this->maintainer = new Maintainer($this->config['configurator']['debug']);
+		}
+
+		return $this->maintainer;
+	}
+
 	private function load()
 	{
+		if ($this->loaded) {
+			return;
+		}
+
 		$loader = new Nette\DI\Config\Loader();
 
 		foreach ($this->bootstrapFiles as $file) {
@@ -105,6 +128,8 @@ class App
 		$this->config['parameters']['rootDir'] = $this->rootDir;
 		$this->config['parameters'] = $this->expandParameters('parameters');
 		$this->config['configurator'] = $this->expandParameters('configurator');
+
+		$this->loaded = TRUE;
 	}
 
 	private function expandParameters(string $key)
@@ -114,6 +139,8 @@ class App
 
 	private function createConfigurator()
 	{
+		$this->load();
+
 		$configurator = new Nette\Configurator();
 		$configurator->defaultExtensions['configurator'] = ConfiguratorExtension::class;
 

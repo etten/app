@@ -26,7 +26,7 @@ class Maintainer
 	public $deploymentUrlRegExp = '';
 
 	/** @var string */
-	public $deploymentJobParameter = 'etten-app-job';
+	public $deploymentJobParameter = 'etten-maintainer-job';
 
 	public function __construct(array $server = [], array $parameters = [])
 	{

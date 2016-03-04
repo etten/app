@@ -21,16 +21,16 @@ class Locker
 	public function lock()
 	{
 		if (!$this->isLocked()) {
-			echo "App Locked.\n";
 			file_put_contents($this->lockFile, NULL);
+			echo "App Locked.\n";
 		}
 	}
 
 	public function unlock()
 	{
 		if ($this->isLocked()) {
-			echo "App Unlocked.\n";
 			unlink($this->lockFile);
+			echo "App Unlocked.\n";
 		}
 	}
 

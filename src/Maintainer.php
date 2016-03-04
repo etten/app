@@ -10,38 +10,54 @@ namespace Etten\App;
 class Maintainer
 {
 
-	/** @var string[] */
-	private $developers = [];
-
 	/** @var array */
 	private $server = [];
 
 	/** @var array */
 	private $parameters = [];
 
-	/** @var string */
-	private $deploymentJobParameter = 'etten-maintainer-job';
+	/** @var array */
+	private $config = [
+		'ips' => [],
+		'token' => '',
+		'jobParameter' => 'etten-maintainer-job',
+		'tokenParameter' => 'etten-maintainer-token',
+	];
 
-	public function __construct(array $developers = [])
+	public function __construct(array $config = [])
 	{
-		$this->developers = $developers;
+		$this->config = array_merge($this->config, $config);
 		$this->server = $_SERVER;
 		$this->parameters = $_GET;
 	}
 
 	public function isJob(string $name):bool
 	{
-		return $this->isDeveloper() && $name === $this->getCurrentJob();
+		return
+			$this->isDeveloper()
+			&& $this->isTokenOk()
+			&& $this->isJobOk($name);
 	}
 
 	private function isDeveloper():bool
 	{
-		return in_array($this->server['REMOTE_ADDR'], $this->developers);
+		$whiteList = (array)$this->config['ips'];
+		return in_array($this->server['REMOTE_ADDR'], $whiteList);
 	}
 
-	private function getCurrentJob():string
+	private function isTokenOk():bool
 	{
-		return $this->parameters[$this->deploymentJobParameter] ?? '';
+		return $this->getParameter($this->config['tokenParameter']) === $this->config['token'];
+	}
+
+	private function isJobOk(string $name):bool
+	{
+		return $this->getParameter($this->config['jobParameter']) === $name;
+	}
+
+	private function getParameter(string $name):string
+	{
+		return $this->parameters[$name] ?? '';
 	}
 
 }

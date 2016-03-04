@@ -27,6 +27,9 @@ class App
 				'::1',
 			],
 			'load' => [],
+			'maintainer' => [
+				'token' => '',
+			],
 		],
 	];
 
@@ -107,7 +110,12 @@ class App
 	{
 		if (!$this->maintainer) {
 			$this->load();
-			$this->maintainer = new Maintainer($this->config['configurator']['debug']);
+
+			$config = [];
+			$config['ips'] = $this->config['configurator']['debug'];
+			$config += $this->config['configurator']['maintainer'];
+
+			$this->maintainer = new Maintainer($config);
 		}
 
 		return $this->maintainer;

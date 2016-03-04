@@ -80,7 +80,7 @@ class Cleaner
 			Caching\Cache::ALL => TRUE,
 		]);
 
-		echo get_class($storage) . " cleaned.\n";
+		echo get_class($storage) . " Cleaned.\n";
 	}
 
 }

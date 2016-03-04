@@ -22,7 +22,6 @@ class Locker
 	{
 		if (!$this->isLocked()) {
 			file_put_contents($this->lockFile, NULL);
-			echo "App Locked.\n";
 		}
 	}
 
@@ -30,7 +29,6 @@ class Locker
 	{
 		if ($this->isLocked()) {
 			unlink($this->lockFile);
-			echo "App Unlocked.\n";
 		}
 	}
 

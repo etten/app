@@ -15,7 +15,8 @@ class Cleaner
 
 	/** @var string[] */
 	public $files = [
-		'../temp/cache/Nette.Configurator',
+		'../temp/cache/Nette.Configurator', // Delete old Configurator - we've changed some files!
+		'../temp/cache/latte', // Latte uses custom directory, so force delete it!
 	];
 
 	/** @var App */

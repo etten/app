@@ -5,7 +5,7 @@
  * Copyright © 2016 Jaroslav Hranička <hranicka@outlook.com>
  */
 
-namespace Etten\App\Maintainer;
+namespace Etten\App;
 
 class Maintainer
 {
@@ -26,20 +26,15 @@ class Maintainer
 	public $jobs = [[]];
 
 	/** @var string */
-	public $deploymentUrlRegExp = '^/service/deploy';
+	public $deploymentUrlRegExp = '';
 
 	/** @var string */
-	public $deploymentJobParameter = 'job';
+	public $deploymentJobParameter = 'etten-app-job';
 
 	public function __construct(array $server = [], array $parameters = [])
 	{
 		$this->server = $server ?: $_SERVER;
 		$this->parameters = $parameters ?: $_GET;
-	}
-
-	public function attach(MaintainerExtension $extension)
-	{
-		$extension->attached($this);
 	}
 
 	public function run()

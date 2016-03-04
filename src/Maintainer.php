@@ -22,11 +22,11 @@ class Maintainer
 	/** @var string */
 	private $deploymentJobParameter = 'etten-maintainer-job';
 
-	public function __construct(array $developers = [], array $server = [], array $parameters = [])
+	public function __construct(array $developers = [])
 	{
 		$this->developers = $developers;
-		$this->server = $server ?: $_SERVER;
-		$this->parameters = $parameters ?: $_GET;
+		$this->server = $_SERVER;
+		$this->parameters = $_GET;
 	}
 
 	public function isJob(string $name):bool

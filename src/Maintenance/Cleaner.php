@@ -8,7 +8,6 @@
 namespace Etten\App\Maintenance;
 
 use Etten\App\App;
-use Etten\App\string;
 use Nette\Caching;
 use Nette\DI;
 

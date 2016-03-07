@@ -55,6 +55,93 @@ This package gives you tools for [etten/sandbox](https://github.com/etten/sandbo
     		- %appDir%
 	```
 
+## Maintenance
+
+* `App` offers helper for maintaining your Application. You can get it via `App::createMaintainer()`.
+* `App\Maintenance\Maintainer` allows you simply add event listeners for specific actions like application turn-off,
+migrations launcher, application turn-on etc.
+
+### Loading an App without Maintainer
+
+	```php
+	<?php
+    
+    namespace Etten\App;
+    
+    // Uncomment following line for turn-off an App
+    //return require __DIR__ . '/.maintenance.php';
+    
+    /** @var App $app */
+    $app = require __DIR__ . '/../app/bootstrap.php';
+    $app->run();
+	```
+
+### Loading an App with Maintainer
+
+	```php
+	<?php
+    
+    namespace Etten\App;
+    
+    use Etten\App\Maintenance;
+    
+    /** @var App $app */
+    $app = require __DIR__ . '/../app/bootstrap.php';
+
+    $maintainer = $app->createMaintainer();
+    
+    $locker = new Maintenance\Locker();
+    
+    // Lock the Application
+    $maintainer->addJob('disable', function () use ($locker) {
+    	$locker->lock();
+    	exit;
+    });
+    
+    // Clean caches, then run Migrations.
+    $maintainer->addJob('enable', function () use ($app) {
+    	(new Maintenance\Cleaner($app))->clean();
+    	(new Maintenance\Console($app))->run('migrations:continue');
+    });
+    
+    // Unlock the Application - it's ready.
+    $maintainer->addJob('enable', function () use ($locker) {
+    	$locker->unlock();
+    	exit;
+    });
+    
+    $maintainer->runJobs();
+    
+    // If locked, show a Maintenance site, otherwise run the App.
+    if ($locker->isLocked()) {
+    	require __DIR__ . '/.maintenance.php';
+    } else {
+    	$app->run();
+    }
+	```
+
+By default, when you load an App via URL `https://example.com/?etten-maintainer-job=disable`, you trigger jobs registered to `disable`.
+
+In our case, `Maintenance\Locker` creates a lock. And later in the file in a condition when lock exists, application is not started.
+
+When you load an App via URL `https://example.com/?etten-maintainer-job=enable`, you trigger jobs registered to `enable`.
+
+In our case, `Maintenance\Cleaner` cleans the all needed caches and `Maintenance\Console` runs
+an [Symfony/Console](http://symfony.com/doc/current/components/console/introduction.html) command `migrations:continue`
+(must be registered to the DI Container of our App).
+
+Jobs are triggered **only for whitelisted IPs**. They are given eg. by config file - a bootstrap of App.
+For example:
+
+	```yaml
+	# /app/config/bootstrap.neon
+
+	configurator:
+		debug:
+			- 192.168.1.1 # whitelisted IP
+
+	```
+
 ## Tests (code bellow is written for PHPUnit)
 
 * In your apps you should create tests (not like this package which has no tests yet).

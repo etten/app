@@ -42,9 +42,6 @@ class App
 	/** @var bool */
 	private $loaded = FALSE;
 
-	/** @var Maintainer|null */
-	private $maintainer;
-
 	public function __construct(string $rootDir)
 	{
 		$this->rootDir = $rootDir;
@@ -66,9 +63,15 @@ class App
 		return $this;
 	}
 
-	public function isMaintainerJob(string $name):bool
+	public function createMaintainer():Maintainer
 	{
-		return $this->getMaintainer()->isJob($name);
+		$this->load();
+
+		$config = [];
+		$config['ips'] = $this->config['configurator']['debug'];
+		$config += $this->config['configurator']['maintainer'];
+
+		return new Maintainer($config);
 	}
 
 	public function createContainer():Nette\DI\Container
@@ -104,21 +107,6 @@ class App
 		}
 
 		return $this;
-	}
-
-	private function getMaintainer():Maintainer
-	{
-		if (!$this->maintainer) {
-			$this->load();
-
-			$config = [];
-			$config['ips'] = $this->config['configurator']['debug'];
-			$config += $this->config['configurator']['maintainer'];
-
-			$this->maintainer = new Maintainer($config);
-		}
-
-		return $this->maintainer;
 	}
 
 	private function load()

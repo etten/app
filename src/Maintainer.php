@@ -24,11 +24,31 @@ class Maintainer
 		'tokenParameter' => 'etten-maintainer-token',
 	];
 
+	/** @var array */
+	private $jobs = [];
+
 	public function __construct(array $config = [])
 	{
 		$this->config = array_merge($this->config, $config);
 		$this->server = $_SERVER;
 		$this->parameters = $_GET;
+	}
+
+	public function addJob(string $name, \Closure $func)
+	{
+		$this->jobs[] = [$name, $func];
+		return $this;
+	}
+
+	public function runJobs()
+	{
+		foreach ($this->jobs as $job) {
+			list($name, $func) = $job;
+
+			if ($this->isJob($name)) {
+				$func();
+			}
+		}
 	}
 
 	public function isJob(string $name):bool

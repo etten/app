@@ -5,8 +5,9 @@
  * Copyright © 2016 Jaroslav Hranička <hranicka@outlook.com>
  */
 
-namespace Etten\App;
+namespace Etten\App\Maintenance;
 
+use Etten\App\App;
 use Symfony\Component\Console as SConsole;
 
 class Console

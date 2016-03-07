@@ -5,8 +5,10 @@
  * Copyright © 2016 Jaroslav Hranička <hranicka@outlook.com>
  */
 
-namespace Etten\App;
+namespace Etten\App\Maintenance;
 
+use Etten\App\App;
+use Etten\App\string;
 use Nette\Caching;
 use Nette\DI;
 

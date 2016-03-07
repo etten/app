@@ -5,7 +5,7 @@
  * Copyright © 2016 Jaroslav Hranička <hranicka@outlook.com>
  */
 
-namespace Etten\App;
+namespace Etten\App\Maintenance;
 
 class Locker
 {
@@ -18,7 +18,7 @@ class Locker
 		$this->lockFile = $lockFile;
 	}
 
-	public function isLocked()
+	public function isLocked():bool
 	{
 		return is_file($this->lockFile);
 	}

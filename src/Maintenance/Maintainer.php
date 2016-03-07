@@ -5,7 +5,7 @@
  * Copyright © 2016 Jaroslav Hranička <hranicka@outlook.com>
  */
 
-namespace Etten\App;
+namespace Etten\App\Maintenance;
 
 class Maintainer
 {

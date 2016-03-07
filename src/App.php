@@ -2,6 +2,7 @@
 
 namespace Etten\App;
 
+use Etten\App\Maintenance;
 use Nette;
 
 class App
@@ -63,7 +64,7 @@ class App
 		return $this;
 	}
 
-	public function createMaintainer():Maintainer
+	public function createMaintainer():Maintenance\Maintainer
 	{
 		$this->load();
 
@@ -71,7 +72,7 @@ class App
 		$config['ips'] = $this->config['configurator']['debug'];
 		$config += $this->config['configurator']['maintainer'];
 
-		return new Maintainer($config);
+		return new Maintenance\Maintainer($config);
 	}
 
 	public function createContainer():Nette\DI\Container

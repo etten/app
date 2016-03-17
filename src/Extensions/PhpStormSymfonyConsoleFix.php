@@ -10,7 +10,7 @@ class PhpStormSymfonyConsoleFix implements App\AppExtension
 
 	public function load(Nette\Configurator $configurator)
 	{
-		// PhpStorm & Symfony Console hotfix
+		// PhpStorm 10 & Symfony Console hotfix
 		// See https://youtrack.jetbrains.com/issue/WI-29627
 
 		if (php_sapi_name() === 'cli') {

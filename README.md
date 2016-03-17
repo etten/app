@@ -142,6 +142,38 @@ For example:
 
 	```
 
+## Nette DI Extensions
+
+`Etten\App` provides also useful Nette DI Container Extensions.
+
+### CleanerExtension
+
+This allows you easily clean all caches via CLI.
+
+Maintainer (above) uses internally the same Console\Command as the CleanerExtension.
+
+So you can delete all your caches same way also via CLI.
+
+You must register the Extension in a config file:
+
+	```yaml
+	# app/config.neon
+	
+	extensions:
+		etten.cleaner: Etten\App\DI\CleanerExtension
+	
+	```
+
+And then you are able to run the command via CLI, eg.:
+
+	```bash
+	
+	php web/index.php cache:clean
+	```
+
+*Concrete path depends on your real application where you use Etten\App.*
+
+
 ## Tests (code bellow is written for PHPUnit)
 
 * In your apps you should create tests (not like this package which has no tests yet).

@@ -20,7 +20,7 @@
         "phpunit/phpunit": "^5.1",
         "squizlabs/php_codesniffer": "^2.5",
         "etten/codestyle": "^1.0",
-        "doctrine/orm": "^2.5"
+        "kdyby/doctrine": "^3.0"
     },
     "autoload": {
         "psr-4": {

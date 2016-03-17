@@ -75,6 +75,34 @@ class App
 		return new Maintenance\Maintainer($config);
 	}
 
+	public function createConfigurator():Nette\Configurator
+	{
+		$this->load();
+
+		$configurator = new Nette\Configurator();
+		$configurator->defaultExtensions['configurator'] = ConfiguratorExtension::class;
+
+		foreach ($this->configFiles as $file) {
+			$configurator->addConfig($file);
+		}
+
+		$configurator->addParameters($this->config['parameters']);
+
+		$configurator->setDebugMode($this->config['configurator']['debug']);
+		$configurator->enableDebugger($this->config['parameters']['logDir']);
+		$configurator->setTempDirectory($this->config['parameters']['tempDir']);
+
+		$configurator->createRobotLoader()
+			->addDirectory($this->config['configurator']['load'])
+			->register();
+
+		foreach ($this->extensions as $extension) {
+			$extension->load($configurator);
+		}
+
+		return $configurator;
+	}
+
 	public function createContainer():Nette\DI\Container
 	{
 		$configurator = $this->createConfigurator();
@@ -132,34 +160,6 @@ class App
 	private function expandParameters(string $key)
 	{
 		return Nette\DI\Helpers::expand($this->config[$key], $this->config['parameters']);
-	}
-
-	private function createConfigurator()
-	{
-		$this->load();
-
-		$configurator = new Nette\Configurator();
-		$configurator->defaultExtensions['configurator'] = ConfiguratorExtension::class;
-
-		foreach ($this->configFiles as $file) {
-			$configurator->addConfig($file);
-		}
-
-		$configurator->addParameters($this->config['parameters']);
-
-		$configurator->setDebugMode($this->config['configurator']['debug']);
-		$configurator->enableDebugger($this->config['parameters']['logDir']);
-		$configurator->setTempDirectory($this->config['parameters']['tempDir']);
-
-		$configurator->createRobotLoader()
-			->addDirectory($this->config['configurator']['load'])
-			->register();
-
-		foreach ($this->extensions as $extension) {
-			$extension->load($configurator);
-		}
-
-		return $configurator;
 	}
 
 }

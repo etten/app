@@ -46,7 +46,7 @@ class Maintainer
 			list($name, $func) = $job;
 
 			if ($this->isJob($name)) {
-				$func();
+				$this->runLongScript($func);
 			}
 		}
 	}
@@ -78,6 +78,17 @@ class Maintainer
 	private function getParameter(string $name):string
 	{
 		return $this->parameters[$name] ?? '';
+	}
+
+	private function runLongScript(callable $callback)
+	{
+		$maxExecTime = ini_set('max_execution_time', 12 * 60); // max 12 hours
+
+		try {
+			$callback();
+		} finally {
+			ini_set('max_execution_time', $maxExecTime);
+		}
 	}
 
 }

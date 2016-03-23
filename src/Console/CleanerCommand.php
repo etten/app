@@ -59,6 +59,7 @@ class CleanerCommand extends Command
 		$files = [
 			'/cache/Nette.Configurator', // Delete old Configurator - we've changed some files!
 			'/cache/latte', // Latte uses custom directory, so force delete it!
+			'/proxies', // Kdyby/Doctrine proxies default directory must be purged.
 		];
 
 		$files = array_map(function (string $file) :string {

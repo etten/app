@@ -2,6 +2,7 @@
 
 namespace Etten\App;
 
+use Etten\App\Extensions\Extension;
 use Etten\App\Maintenance;
 use Nette;
 
@@ -37,7 +38,7 @@ class App
 	/** @var string[] */
 	private $configFiles = [];
 
-	/** @var AppExtension[] */
+	/** @var Extension[] */
 	private $extensions = [];
 
 	/** @var bool */
@@ -58,7 +59,7 @@ class App
 		return $this->addFile($this->configFiles, $file, $name);
 	}
 
-	public function addExtension(AppExtension $extension):App
+	public function addExtension(Extension $extension):App
 	{
 		$this->extensions[] = $extension;
 		return $this;

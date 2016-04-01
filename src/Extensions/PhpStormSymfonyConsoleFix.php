@@ -2,10 +2,9 @@
 
 namespace Etten\App\Extensions;
 
-use Etten\App;
 use Nette;
 
-class PhpStormSymfonyConsoleFix implements App\AppExtension
+class PhpStormSymfonyConsoleFix implements Extension
 {
 
 	public function onConfiguratorCreate(Nette\Configurator $configurator)

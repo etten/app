@@ -2,10 +2,9 @@
 
 namespace Etten\App\Extensions;
 
-use Etten\App;
 use Nette;
 
-class SystemSetup implements App\AppExtension
+class SystemSetup implements Extension
 {
 
 	public function onConfiguratorCreate(Nette\Configurator $configurator)

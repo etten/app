@@ -1,10 +1,10 @@
 <?php
 
-namespace Etten\App;
+namespace Etten\App\Extensions;
 
 use Nette;
 
-interface AppExtension
+interface Extension
 {
 
 	public function onConfiguratorCreate(Nette\Configurator $configurator);

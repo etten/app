@@ -8,7 +8,7 @@ use Nette;
 class PhpStormSymfonyConsoleFix implements App\AppExtension
 {
 
-	public function load(Nette\Configurator $configurator)
+	public function onConfiguratorCreate(Nette\Configurator $configurator)
 	{
 		// PhpStorm 10 & Symfony Console hotfix
 		// See https://youtrack.jetbrains.com/issue/WI-29627
@@ -21,7 +21,7 @@ class PhpStormSymfonyConsoleFix implements App\AppExtension
 		}
 	}
 
-	public function run(Nette\Configurator $configurator)
+	public function onContainerCreate(Nette\DI\Container $container)
 	{
 
 	}

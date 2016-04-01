@@ -7,8 +7,8 @@ use Nette;
 interface AppExtension
 {
 
-	public function load(Nette\Configurator $configurator);
+	public function onConfiguratorCreate(Nette\Configurator $configurator);
 
-	public function run(Nette\Configurator $configurator);
+	public function onContainerCreate(Nette\DI\Container $container);
 
 }

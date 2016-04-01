@@ -97,7 +97,7 @@ class App
 			->register();
 
 		foreach ($this->extensions as $extension) {
-			$extension->load($configurator);
+			$extension->onConfiguratorCreate($configurator);
 		}
 
 		return $configurator;
@@ -112,11 +112,13 @@ class App
 			$compiler->addConfig($this->config);
 		};
 
+		$container = $configurator->createContainer();
+
 		foreach ($this->extensions as $extension) {
-			$extension->run($configurator);
+			$extension->onContainerCreate($container);
 		}
 
-		return $configurator->createContainer();
+		return $container;
 	}
 
 	public function run()

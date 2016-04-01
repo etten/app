@@ -17,17 +17,12 @@ abstract class ContainerTestCase extends TestCase
 	/** @var Nette\DI\Container */
 	private static $container;
 
-	public static function setUpBeforeClass()
+	public function getContainer():Nette\DI\Container
 	{
-		parent::setUpBeforeClass();
-
 		if (!self::$container) {
 			self::$container = self::createContainer();
 		}
-	}
 
-	public function getContainer():Nette\DI\Container
-	{
 		return self::$container;
 	}
 

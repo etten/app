@@ -113,6 +113,10 @@ class App
 			$compiler->addConfig($this->config);
 		};
 
+		foreach ($this->extensions as $extension) {
+			$configurator->onCompile[] = [$extension, 'onConfiguratorCompile'];
+		}
+
 		$container = $configurator->createContainer();
 
 		foreach ($this->extensions as $extension) {

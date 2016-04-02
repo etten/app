@@ -17,6 +17,11 @@ abstract class AbstractExtension implements Extension
 
 	}
 
+	public function onConfiguratorCompile(Nette\Configurator $sender, Nette\DI\Compiler $compiler)
+	{
+
+	}
+
 	public function onContainerCreate(Nette\DI\Container $container)
 	{
 

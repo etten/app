@@ -9,6 +9,8 @@ interface Extension
 
 	public function onConfiguratorCreate(Nette\Configurator $configurator, array $config);
 
+	public function onConfiguratorCompile(Nette\Configurator $sender, Nette\DI\Compiler $compiler);
+
 	public function onContainerCreate(Nette\DI\Container $container);
 
 }

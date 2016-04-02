@@ -7,7 +7,7 @@ use Nette;
 class PhpStormSymfonyConsoleFix implements Extension
 {
 
-	public function onConfiguratorCreate(Nette\Configurator $configurator)
+	public function onConfiguratorCreate(Nette\Configurator $configurator, array $config)
 	{
 		// PhpStorm 10 & Symfony Console hotfix
 		// See https://youtrack.jetbrains.com/issue/WI-29627

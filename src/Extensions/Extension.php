@@ -7,7 +7,7 @@ use Nette;
 interface Extension
 {
 
-	public function onConfiguratorCreate(Nette\Configurator $configurator);
+	public function onConfiguratorCreate(Nette\Configurator $configurator, array $config);
 
 	public function onContainerCreate(Nette\DI\Container $container);
 

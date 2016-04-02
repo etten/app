@@ -98,7 +98,7 @@ class App
 			->register();
 
 		foreach ($this->extensions as $extension) {
-			$extension->onConfiguratorCreate($configurator);
+			$extension->onConfiguratorCreate($configurator, $this->config);
 		}
 
 		return $configurator;

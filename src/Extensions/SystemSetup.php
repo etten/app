@@ -7,7 +7,7 @@ use Nette;
 class SystemSetup implements Extension
 {
 
-	public function onConfiguratorCreate(Nette\Configurator $configurator)
+	public function onConfiguratorCreate(Nette\Configurator $configurator, array $config)
 	{
 		umask(0); // 0666 file, 0777 folder
 		mb_internal_encoding('UTF-8'); // forces UTF-8 internal encoding

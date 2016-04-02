@@ -4,7 +4,7 @@ namespace Etten\App\Extensions;
 
 use Nette;
 
-class PhpStormSymfonyConsoleFix implements Extension
+class PhpStormSymfonyConsoleFix extends AbstractExtension
 {
 
 	public function onConfiguratorCreate(Nette\Configurator $configurator, array $config)
@@ -18,11 +18,6 @@ class PhpStormSymfonyConsoleFix implements Extension
 				die('Symfony version 2.8.0');
 			}
 		}
-	}
-
-	public function onContainerCreate(Nette\DI\Container $container)
-	{
-
 	}
 
 }

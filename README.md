@@ -9,51 +9,51 @@ This package gives you tools for [etten/sandbox](https://github.com/etten/sandbo
 * Additional configuration of `Nette\Configurator` can be given by an Extension and not directly in a long boostrap PHP file.
 * See an example bellow.
 
-	```php
-	<?php
-	// app/bootstrap.php
-	
-	namespace App;
-	
-	use Etten;
-	
-	require __DIR__ . '/../vendor/autoload.php';
-	
-	// Create with a root directory path (for path mappings)
-	$app = new Etten\App\App(__DIR__ . '/..');
-	
-	// Load boostrap configuration file
-	$app->addBootstrapFile(__DIR__ . '/config/bootstrap.neon');
-	
-	// Load Nette application configuration
-	$app->addConfigFile(__DIR__ . '/config/config.neon');
-	
-	// Local-specific config, eg. database credentials
-	// You can redefine it when you add another config with the same name ("local")
-	$app->addConfigFile(__DIR__ . '/config/config.local.neon', 'local');
-	
-	// Load optional Extension which helps you keep this bootstrap file clean
-	$app->addExtension(new Etten\App\Extensions\SystemSetup());
-	
-	return $app;
-	```
+```php
+<?php
+// app/bootstrap.php
 
-	```yaml
-	# app/config/bootstrap.neon
+namespace App;
 
-	parameters:
-    	appDir: %rootDir%/app # configure directory paths
-    	logDir: %rootDir%/log
-    	tempDir: %rootDir%/temp
-    	wwwDir: %rootDir%/www
-    
-    configurator:
-    	debug: # IP addresses where debug mode is ALWAYS ON
-    		- 192.168.1.1
-    
-    	load: # Directories which are controlled by Nette\Loaders\RobotLoader
-    		- %appDir%
-	```
+use Etten;
+
+require __DIR__ . '/../vendor/autoload.php';
+
+// Create with a root directory path (for path mappings)
+$app = new Etten\App\App(__DIR__ . '/..');
+
+// Load boostrap configuration file
+$app->addBootstrapFile(__DIR__ . '/config/bootstrap.neon');
+
+// Load Nette application configuration
+$app->addConfigFile(__DIR__ . '/config/config.neon');
+
+// Local-specific config, eg. database credentials
+// You can redefine it when you add another config with the same name ("local")
+$app->addConfigFile(__DIR__ . '/config/config.local.neon', 'local');
+
+// Load optional Extension which helps you keep this bootstrap file clean
+$app->addExtension(new Etten\App\Extensions\SystemSetup());
+
+return $app;
+```
+
+```yaml
+# app/config/bootstrap.neon
+
+parameters:
+	appDir: %rootDir%/app # configure directory paths
+	logDir: %rootDir%/log
+	tempDir: %rootDir%/temp
+	wwwDir: %rootDir%/www
+
+configurator:
+	debug: # IP addresses where debug mode is ALWAYS ON
+		- 192.168.1.1
+
+	load: # Directories which are controlled by Nette\Loaders\RobotLoader
+		- %appDir%
+```
 
 ## Maintenance
 
@@ -63,62 +63,64 @@ migrations launcher, application turn-on etc.
 
 ### Loading an App without Maintainer
 
-	```php
-	<?php
-    
-    namespace Etten\App;
-    
-    // Uncomment following line for turn-off an App
-    //return require __DIR__ . '/.maintenance.php';
-    
-    /** @var App $app */
-    $app = require __DIR__ . '/../app/bootstrap.php';
-    $app->run();
-	```
+```php
+<?php
+// web/index.php
+
+namespace Etten\App;
+
+// Uncomment following line for turn-off an App
+//return require __DIR__ . '/.maintenance.php';
+
+/** @var App $app */
+$app = require __DIR__ . '/../app/bootstrap.php';
+$app->run();
+```
 
 ### Loading an App with Maintainer
 
-	```php
-	<?php
-    
-    namespace Etten\App;
-    
-    use Etten\App\Maintenance;
-    
-    /** @var App $app */
-    $app = require __DIR__ . '/../app/bootstrap.php';
+```php
+<?php
+// web/index.php
 
-    $maintainer = $app->createMaintainer();
-    
-    $locker = new Maintenance\Locker();
-    
-    // Lock the Application
-    $maintainer->addJob('disable', function () use ($locker) {
-    	$locker->lock();
-    	exit;
-    });
-    
-    // Clean caches, then run Migrations.
-    $maintainer->addJob('enable', function () use ($app) {
-    	(new Maintenance\Cleaner($app))->clean();
-    	(new Maintenance\Console($app))->run('migrations:continue');
-    });
-    
-    // Unlock the Application - it's ready.
-    $maintainer->addJob('enable', function () use ($locker) {
-    	$locker->unlock();
-    	exit;
-    });
-    
-    $maintainer->runJobs();
-    
-    // If locked, show a Maintenance site, otherwise run the App.
-    if ($locker->isLocked()) {
-    	require __DIR__ . '/.maintenance.php';
-    } else {
-    	$app->run();
-    }
-	```
+namespace Etten\App;
+
+use Etten\App\Maintenance;
+
+/** @var App $app */
+$app = require __DIR__ . '/../app/bootstrap.php';
+
+$maintainer = $app->createMaintainer();
+
+$locker = new Maintenance\Locker();
+
+// Lock the Application
+$maintainer->addJob('disable', function () use ($locker) {
+	$locker->lock();
+	exit;
+});
+
+// Clean caches, then run Migrations.
+$maintainer->addJob('enable', function () use ($app) {
+	(new Maintenance\Cleaner($app))->clean();
+	(new Maintenance\Console($app))->run('migrations:continue');
+});
+
+// Unlock the Application - it's ready.
+$maintainer->addJob('enable', function () use ($locker) {
+	$locker->unlock();
+	exit;
+});
+
+$maintainer->runJobs();
+
+// If locked, show a Maintenance site, otherwise run the App.
+if ($locker->isLocked()) {
+	require __DIR__ . '/.maintenance.php';
+} else {
+	$app->run();
+}
+```
 
 By default, when you load an App via URL `https://example.com/?etten-maintainer-job=disable`, you trigger jobs registered to `disable`.
 
@@ -133,14 +135,14 @@ an [Symfony/Console](http://symfony.com/doc/current/components/console/introduct
 Jobs are triggered **only for whitelisted IPs**. They are given eg. by config file - a bootstrap of App.
 For example:
 
-	```yaml
-	# /app/config/bootstrap.neon
+```yaml
+# /app/config/bootstrap.neon
 
-	configurator:
-		debug:
-			- 192.168.1.1 # whitelisted IP
+configurator:
+	debug:
+		- 192.168.1.1 # whitelisted IP
 
-	```
+```
 
 ## Nette DI Extensions
 
@@ -156,20 +158,19 @@ So you can delete all your caches same way also via CLI.
 
 You must register the Extension in a config file:
 
-	```yaml
-	# app/config.neon
-	
-	extensions:
-		etten.cleaner: Etten\App\DI\CleanerExtension
-	
-	```
+```yaml
+# app/config.neon
+
+extensions:
+	etten.cleaner: Etten\App\DI\CleanerExtension
+
+```
 
 And then you are able to run the command via CLI, eg.:
 
-	```bash
-	
-	php web/index.php cache:clean
-	```
+```bash
+php web/index.php cache:clean
+```
 
 *Concrete path depends on your real application where you use Etten\App.*
 
@@ -181,42 +182,42 @@ And then you are able to run the command via CLI, eg.:
 * In ideal situation it should be configured as-in a real application.
 * With this packages you can create testing bootstrap file like bellow.
 
-	```php
-	<?php
-	// tests/boostrap.php
-    
-    namespace Tests;
-    
-    use Etten;
-    
-    /** @var Etten\App\App $app */
-    $app = require __DIR__ . '/../app/bootstrap.php';
-	
-    // Store created App instance for TestCase which provides Nette\DI\Container instance
-    Etten\App\Tests\ContainerTestCase::$app = $app;
-	
-    // Set additional bootstrap configuration
-    $app->addBootstrapFile(__DIR__ . '/bootstrap.neon');
-    
-    // Rewrite "local" configuration file (we don't need exactly the same DB, cache, ...)
-    $app->addConfigFile(__DIR__ . '/config.local.neon', 'local');
-	
-    return $app;
-	```
+```php
+<?php
+// tests/boostrap.php
 
-	```yaml
-	# tests/bootstrap.neon
+namespace Tests;
 
-	parameters:
-    	testDir: %rootDir%/tests # reconfigure some directory paths
-    	logDir: %rootDir%/tests/log
-    	tempDir: %rootDir%/tests/temp
-    
-    configurator:
-    	debug: yes # Debugger is always on for tests
-    	load: # Add additional directories for Nette\Loaders\RobotLoader
-    		- %testDir%
-	```
+use Etten;
+
+/** @var Etten\App\App $app */
+$app = require __DIR__ . '/../app/bootstrap.php';
+
+// Store created App instance for TestCase which provides Nette\DI\Container instance
+Etten\App\Tests\ContainerTestCase::$app = $app;
+
+// Set additional bootstrap configuration
+$app->addBootstrapFile(__DIR__ . '/bootstrap.neon');
+
+// Rewrite "local" configuration file (we don't need exactly the same DB, cache, ...)
+$app->addConfigFile(__DIR__ . '/config.local.neon', 'local');
+
+return $app;
+```
+
+```yaml
+# tests/bootstrap.neon
+
+parameters:
+	testDir: %rootDir%/tests # reconfigure some directory paths
+	logDir: %rootDir%/tests/log
+	tempDir: %rootDir%/tests/temp
+
+configurator:
+	debug: yes # Debugger is always on for tests
+	load: # Add additional directories for Nette\Loaders\RobotLoader
+		- %testDir%
+```
 
 ### Unit testing (DI\Container IS NOT required)
 
@@ -234,40 +235,40 @@ And then you are able to run the command via CLI, eg.:
 * You can test them easily if you extend you TestCase by `\Etten\App\Tests\PresenterTestCase`.
 * Sample test may look like code bellow.
 
-	```php
-	<?php
-    
-    namespace Tests;
-    
-    use App;
-    use Etten;
-    use Nette;
-    
-    class HomepagePresenterTest extends Etten\App\Tests\PresenterContainerTestCase
-    {
-    
-    	protected function getPresenterName():string
-    	{
-    		// You must configure FQN of currently tested Presenter
-    		return 'Front:Homepage';
-    	}
-    
-    	public function testHandleDelete()
-    	{
-    		// You can test signals
-    		$response = $this->runSignal('delete');
-    		$this->assertInstanceOf(Nette\Application\Responses\RedirectResponse::class, $response);
-    	}
-    
-    	public function testRenderDefault()
-    	{
-    		// And actions too
-    		$response = $this->runAction();
-    		$this->assertInstanceOf(Nette\Application\Responses\TextResponse::class, $response);
-    	}
-    
-    }
-	```
+```php
+<?php
+
+namespace Tests;
+
+use App;
+use Etten;
+use Nette;
+
+class HomepagePresenterTest extends Etten\App\Tests\PresenterContainerTestCase
+{
+
+	protected function getPresenterName():string
+	{
+		// You must configure FQN of currently tested Presenter
+		return 'Front:Homepage';
+	}
+
+	public function testHandleDelete()
+	{
+		// You can test signals
+		$response = $this->runSignal('delete');
+		$this->assertInstanceOf(Nette\Application\Responses\RedirectResponse::class, $response);
+	}
+
+	public function testRenderDefault()
+	{
+		// And actions too
+		$response = $this->runAction();
+		$this->assertInstanceOf(Nette\Application\Responses\TextResponse::class, $response);
+	}
+
+}
+```
 
 ### Doctrine testing (DI\Container IS required)
 

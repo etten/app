@@ -21,17 +21,18 @@ class Console
 		$this->app = $app;
 	}
 
-	public function run(string $commandName, array $argv = [])
+	public function run(string $command, array $parameters = [])
 	{
 		$container = $this->app->createContainer();
 
 		/** @var SConsole\Application $console */
 		$console = $container->getByType(SConsole\Application::class);
 
-		$command = $console->find($commandName);
+		// Correctly set a command name.
+		$parameters['command'] = $command;
 
-		return $command->run(
-			new SConsole\Input\ArgvInput($argv),
+		return $console->run(
+			new SConsole\Input\ArrayInput($parameters),
 			new SConsole\Output\NullOutput()
 		);
 	}

@@ -100,9 +100,15 @@ $maintainer->addJob('disable', function () use ($locker) {
 	exit;
 });
 
-// Clean caches, then run Migrations.
+// Clean caches, setup, migrations, warm-up.
 $maintainer->addJob('enable', function () use ($app) {
+	// Clean all caches.
 	(new Maintenance\Cleaner($app))->clean();
+	
+	// If you have Doctrine 2.
+	(new Maintenance\Console($app))->run('orm:generate-proxies');
+	
+	// Run new migrations.
 	(new Maintenance\Console($app))->run('migrations:continue');
 });
 

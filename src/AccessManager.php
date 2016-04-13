@@ -43,7 +43,7 @@ class AccessManager
 
 	private function isTokenOk():bool
 	{
-		return $this->getParameter($this->config['tokenParameter']) === $this->config['token'];
+		return $this->config['token'] && $this->getParameter($this->config['tokenParameter']) === $this->config['token'];
 	}
 
 	private function getParameter(string $name):string

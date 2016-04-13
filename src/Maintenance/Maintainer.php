@@ -53,17 +53,18 @@ class Maintainer
 
 	public function isJob(string $name):bool
 	{
-		return
-			$this->isDeveloper()
-			&& $this->isTokenOk()
-			&& $this->isJobOk($name);
+		return $this->isDeveloper() && $this->isJobOk($name);
 	}
 
 	private function isDeveloper():bool
 	{
+		if ($this->isTokenOk()) {
+			return TRUE;
+		}
+
 		$whiteList = (array)$this->config['ips'];
 		$remoteIp = $this->server['REMOTE_ADDR'] ?? '';
-		return in_array($remoteIp, $whiteList) || in_array('*', $whiteList);
+		return in_array($remoteIp, $whiteList);
 	}
 
 	private function isTokenOk():bool

@@ -47,16 +47,25 @@ parameters:
 	logDir: %rootDir%/log
 	tempDir: %rootDir%/temp
 	wwwDir: %rootDir%/www
+	
+	developer:
+		# Run in development state for specific IPs
+		ips:
+			- 127.0.0.1
+			- ::1
+
+		# Additionally you can set secret token which is read prior to IP address
+		# Token is read from HTTP GET "etten-maintainer-token" parameter.
+		token: ''
+
 
 configurator:
-	developer:
-		# Run tests in development state for specific IPs
-		ips:
-			- 192.168.1.1
+	developer: %developer%
 
 	# Directories which are controlled by Nette\Loaders\RobotLoader
 	load:
 		- %appDir%
+
 ```
 
 ## Maintenance
@@ -142,18 +151,9 @@ In our case, `Maintenance\Cleaner` cleans the all needed caches and `Maintenance
 an [Symfony/Console](http://symfony.com/doc/current/components/console/introduction.html) command `migrations:continue`
 (must be registered to the DI Container of our App).
 
-Jobs are triggered **only for whitelisted IPs**. They are given eg. by config file - a bootstrap of App.
-For example:
-
-```yaml
-# /app/config/bootstrap.neon
-
-configurator:
-	developer:
-		ips:
-			- 192.168.1.1
-
-```
+Jobs are triggered **only for whitelisted IPs OR request with a secret token**.
+They can be defined with config file - a bootstrap of App.
+See above.
 
 ## Nette DI Extensions
 
@@ -225,13 +225,6 @@ parameters:
 	logDir: %rootDir%/tests/log
 	tempDir: %rootDir%/tests/temp
 
-configurator:
-	# Run tests always in development state
-	developer: yes
-
-	# Add additional directories for Nette\Loaders\RobotLoader
-	load:
-		- %testDir%
 ```
 
 ### Unit testing (DI\Container IS NOT required)

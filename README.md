@@ -42,16 +42,20 @@ return $app;
 # app/config/bootstrap.neon
 
 parameters:
-	appDir: %rootDir%/app # configure directory paths
+	# configure directory paths
+	appDir: %rootDir%/app
 	logDir: %rootDir%/log
 	tempDir: %rootDir%/temp
 	wwwDir: %rootDir%/www
 
 configurator:
-	debug: # IP addresses where debug mode is ALWAYS ON
-		- 192.168.1.1
+	developer:
+		# Run tests in development state for specific IPs
+		ips:
+			- 192.168.1.1
 
-	load: # Directories which are controlled by Nette\Loaders\RobotLoader
+	# Directories which are controlled by Nette\Loaders\RobotLoader
+	load:
 		- %appDir%
 ```
 
@@ -145,8 +149,9 @@ For example:
 # /app/config/bootstrap.neon
 
 configurator:
-	debug:
-		- 192.168.1.1 # whitelisted IP
+	developer:
+		ips:
+			- 192.168.1.1
 
 ```
 
@@ -215,13 +220,17 @@ return $app;
 # tests/bootstrap.neon
 
 parameters:
-	testDir: %rootDir%/tests # reconfigure some directory paths
+	# reconfigure some directory paths
+	testDir: %rootDir%/tests
 	logDir: %rootDir%/tests/log
 	tempDir: %rootDir%/tests/temp
 
 configurator:
-	debug: yes # Debugger is always on for tests
-	load: # Add additional directories for Nette\Loaders\RobotLoader
+	# Run tests always in development state
+	developer: yes
+
+	# Add additional directories for Nette\Loaders\RobotLoader
+	load:
 		- %testDir%
 ```
 

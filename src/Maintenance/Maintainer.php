@@ -7,22 +7,23 @@
 
 namespace Etten\App\Maintenance;
 
+use Etten\App\AccessManager;
+
 class Maintainer
 {
-
-	/** @var array */
-	private $server = [];
-
-	/** @var array */
-	private $parameters = [];
 
 	/** @var array */
 	private $config = [
 		'ips' => [],
 		'token' => '',
 		'jobParameter' => 'etten-maintainer-job',
-		'tokenParameter' => 'etten-maintainer-token',
 	];
+
+	/** @var array */
+	private $parameters;
+
+	/** @var AccessManager */
+	private $accessManager;
 
 	/** @var array */
 	private $jobs = [];
@@ -30,8 +31,8 @@ class Maintainer
 	public function __construct(array $config = [])
 	{
 		$this->config = array_merge($this->config, $config);
-		$this->server = $_SERVER;
 		$this->parameters = $_GET;
+		$this->accessManager = new AccessManager($config);
 	}
 
 	public function addJob(string $name, \Closure $func)
@@ -53,23 +54,7 @@ class Maintainer
 
 	public function isJob(string $name):bool
 	{
-		return $this->isDeveloper() && $this->isJobOk($name);
-	}
-
-	private function isDeveloper():bool
-	{
-		if ($this->isTokenOk()) {
-			return TRUE;
-		}
-
-		$whiteList = (array)$this->config['ips'];
-		$remoteIp = $this->server['REMOTE_ADDR'] ?? '';
-		return in_array($remoteIp, $whiteList);
-	}
-
-	private function isTokenOk():bool
-	{
-		return $this->getParameter($this->config['tokenParameter']) === $this->config['token'];
+		return $this->accessManager->isDeveloper() && $this->isJobOk($name);
 	}
 
 	private function isJobOk(string $name):bool

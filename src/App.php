@@ -24,15 +24,14 @@ class App
 			'tempDir' => NULL,
 		],
 		'configurator' => [
-			'debug' => [
-				'127.0.0.1',
-				'::1',
+			'developer' => [
+				'token' => '',
+				'ips' => [
+					'127.0.0.1',
+					'::1',
+				],
 			],
 			'load' => [],
-			'maintainer' => [
-				'token' => '',
-				'ips' => [],
-			],
 		],
 	];
 
@@ -69,14 +68,7 @@ class App
 	public function createMaintainer():Maintenance\Maintainer
 	{
 		$this->load();
-
-		$config = $this->config['configurator']['maintainer'];
-
-		// Back-compatibility
-		if (!$config['ips']) {
-			$config['ips'] = $this->config['configurator']['debug'];
-		}
-
+		$config = $this->config['configurator']['developer'];
 		return new Maintenance\Maintainer($config);
 	}
 
@@ -93,7 +85,10 @@ class App
 
 		$configurator->addParameters($this->config['parameters']);
 
-		$configurator->setDebugMode($this->config['configurator']['debug']);
+		$configurator->setDebugMode(
+			$this->isDeveloper($this->config['configurator']['developer'])
+		);
+
 		$configurator->enableDebugger($this->config['parameters']['logDir']);
 		$configurator->setTempDirectory($this->config['parameters']['tempDir']);
 
@@ -165,12 +160,37 @@ class App
 		$this->config['parameters'] = $this->expandParameters('parameters');
 		$this->config['configurator'] = $this->expandParameters('configurator');
 
+		// Back-compatibility
+		if (isset($this->config['configurator']['debug'])) {
+			$debug = $this->config['configurator']['debug'];
+
+			if (is_bool($debug)) {
+				$this->config['configurator']['developer'] = $debug;
+			} else {
+				$this->config['configurator']['developer']['ips'] = $debug;
+			}
+		}
+
 		$this->loaded = TRUE;
 	}
 
 	private function expandParameters(string $key)
 	{
 		return Nette\DI\Helpers::expand($this->config[$key], $this->config['parameters']);
+	}
+
+	/**
+	 * @param array|bool $config
+	 * @return bool
+	 */
+	private function isDeveloper($config)
+	{
+		if (is_bool($config)) {
+			return $config;
+		}
+
+		$accessManager = new AccessManager($config);
+		return $accessManager->isDeveloper();
 	}
 
 }

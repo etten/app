@@ -31,6 +31,7 @@ class App
 			'load' => [],
 			'maintainer' => [
 				'token' => '',
+				'ips' => [],
 			],
 		],
 	];
@@ -69,9 +70,12 @@ class App
 	{
 		$this->load();
 
-		$config = [];
-		$config['ips'] = $this->config['configurator']['debug'];
-		$config += $this->config['configurator']['maintainer'];
+		$config = $this->config['configurator']['maintainer'];
+
+		// Back-compatibility
+		if (!$config['ips']) {
+			$config['ips'] = $this->config['configurator']['debug'];
+		}
 
 		return new Maintenance\Maintainer($config);
 	}

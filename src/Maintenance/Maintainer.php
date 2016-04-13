@@ -62,7 +62,8 @@ class Maintainer
 	private function isDeveloper():bool
 	{
 		$whiteList = (array)$this->config['ips'];
-		return in_array($this->server['REMOTE_ADDR'] ?? '', $whiteList);
+		$remoteIp = $this->server['REMOTE_ADDR'] ?? '';
+		return in_array($remoteIp, $whiteList) || in_array('*', $whiteList);
 	}
 
 	private function isTokenOk():bool

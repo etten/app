@@ -162,12 +162,14 @@ class App
 
 		// Back-compatibility
 		if (isset($this->config['configurator']['debug'])) {
-			$debug = $this->config['configurator']['debug'];
+			$debug = &$this->config['configurator']['debug'];
+			$developer = &$this->config['configurator']['developer'];
 
 			if (is_bool($debug)) {
-				$this->config['configurator']['developer'] = $debug;
+				$developer = $debug;
 			} else {
-				$this->config['configurator']['developer']['ips'] = $debug;
+				$debug = array_merge($developer['ips'], $debug);
+				$developer['ips'] = $debug;
 			}
 		}
 

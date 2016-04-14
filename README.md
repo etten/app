@@ -225,6 +225,11 @@ parameters:
 	logDir: %rootDir%/tests/log
 	tempDir: %rootDir%/tests/temp
 
+
+configurator:
+	load:
+		- %testDir%
+
 ```
 
 ### Unit testing (DI\Container IS NOT required)

@@ -146,16 +146,17 @@ You can trigger Maintainer's jobs by two ways:
 * CLI script like `php web/index.php maintainer:disable` where `disable` is above defined job.
 * HTTP request like `https://example.com/?etten-maintainer-job=disable`.
 
-So we've triggered *disable* job.
-
+So we've triggered `disable` job.
 In our case, `Maintenance\Locker` creates a lock. And when lock exists, application is not started and returns STATUS 503.
 
-When you trigger a job `enable`, `Maintenance\Cleaner` cleans the all needed caches, `Maintenance\Console` runs
+When you trigger a job `enable` (CLI or HTTP), `Maintenance\Cleaner` cleans the all needed caches, `Maintenance\Console` runs
 an [Symfony/Console](http://symfony.com/doc/current/components/console/introduction.html) command `migrations:continue`
 (must be registered to the DI Container of our App).
 
-HTTP jobs are triggered **only for whitelisted IPs OR request with a secret token**.
+**HTTP jobs** are triggered **only for whitelisted IPs OR request with a secret token**.
 They can be defined with config file - a bootstrap of App. See `app/config/bootstrap.neon`.
+
+When possible, prefer CLI jobs (i.e. over SSH).
 
 ## Nette DI Extensions
 

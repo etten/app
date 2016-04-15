@@ -141,19 +141,21 @@ if ($locker->isLocked()) {
 }
 ```
 
-By default, when you load an App via URL `https://example.com/?etten-maintainer-job=disable`, you trigger jobs registered to `disable`.
+You can trigger Maintainer's jobs by two ways:
 
-In our case, `Maintenance\Locker` creates a lock. And later in the file in a condition when lock exists, application is not started.
+* CLI script like `php web/index.php maintainer:disable` where `disable` is above defined job.
+* HTTP request like `https://example.com/?etten-maintainer-job=disable`.
 
-When you load an App via URL `https://example.com/?etten-maintainer-job=enable`, you trigger jobs registered to `enable`.
+So we've triggered *disable* job.
 
-In our case, `Maintenance\Cleaner` cleans the all needed caches and `Maintenance\Console` runs
+In our case, `Maintenance\Locker` creates a lock. And when lock exists, application is not started and returns STATUS 503.
+
+When you trigger a job `enable`, `Maintenance\Cleaner` cleans the all needed caches, `Maintenance\Console` runs
 an [Symfony/Console](http://symfony.com/doc/current/components/console/introduction.html) command `migrations:continue`
 (must be registered to the DI Container of our App).
 
-Jobs are triggered **only for whitelisted IPs OR request with a secret token**.
-They can be defined with config file - a bootstrap of App.
-See above.
+HTTP jobs are triggered **only for whitelisted IPs OR request with a secret token**.
+They can be defined with config file - a bootstrap of App. See `app/config/bootstrap.neon`.
 
 ## Nette DI Extensions
 

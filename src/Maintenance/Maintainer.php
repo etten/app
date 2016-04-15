@@ -19,6 +19,9 @@ class Maintainer
 		'jobParameter' => 'etten-maintainer-job',
 	];
 
+	/** @var string */
+	private $namespace = 'maintainer';
+
 	/** @var array */
 	private $parameters;
 
@@ -54,11 +57,42 @@ class Maintainer
 
 	public function isJob(string $name):bool
 	{
-		return $this->accessManager->isDeveloper() && $this->isJobOk($name);
+		if (php_sapi_name() === 'cli') {
+			return $this->isCliJob($name);
+		} else {
+			return $this->isHttpJob($name);
+		}
 	}
 
-	private function isJobOk(string $name):bool
+	private function isCliJob(string $name):bool
 	{
+		$argv = $_SERVER['argv'];
+
+		// strip the script name
+		array_shift($argv);
+
+		if (empty($argv)) {
+			return FALSE;
+		}
+
+		$command = array_shift($argv);
+		$parts = explode(':', $command);
+
+		$namespace = array_shift($parts);
+		if ($namespace === $this->namespace) {
+			$job = array_shift($parts);
+			return $job === $name;
+		}
+
+		return FALSE;
+	}
+
+	private function isHttpJob(string $name):bool
+	{
+		if (!$this->accessManager->isDeveloper()) {
+			return FALSE;
+		}
+
 		return $this->getParameter($this->config['jobParameter']) === $name;
 	}
 

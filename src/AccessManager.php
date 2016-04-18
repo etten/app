@@ -32,6 +32,10 @@ class AccessManager
 
 	public function isDeveloper():bool
 	{
+		if (php_sapi_name() === 'cli') {
+			return TRUE;
+		}
+
 		if ($this->isTokenOk()) {
 			return TRUE;
 		}

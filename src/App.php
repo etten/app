@@ -92,9 +92,7 @@ class App
 		$configurator->enableDebugger($this->config['parameters']['logDir']);
 		$configurator->setTempDirectory($this->config['parameters']['tempDir']);
 
-		$configurator->createRobotLoader()
-			->addDirectory($this->config['configurator']['load'])
-			->register();
+		$this->registerRobotLoader($configurator, $this->config['configurator']['load']);
 
 		foreach ($this->extensions as $extension) {
 			$extension->onConfiguratorCreate($configurator, $this->config);
@@ -179,6 +177,17 @@ class App
 	private function expandParameters(string $key)
 	{
 		return Nette\DI\Helpers::expand($this->config[$key], $this->config['parameters']);
+	}
+
+	private function registerRobotLoader(Nette\Configurator $configurator, array $paths)
+	{
+		if (!$paths) {
+			return;
+		}
+
+		$configurator->createRobotLoader()
+			->addDirectory($paths)
+			->register();
 	}
 
 }

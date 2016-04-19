@@ -67,9 +67,13 @@ class App
 
 	public function createMaintainer():Maintenance\Maintainer
 	{
+		return new Maintenance\Maintainer($this->createAccessManager());
+	}
+
+	public function createAccessManager():AccessManager
+	{
 		$this->load();
-		$config = $this->config['configurator']['developer'];
-		return new Maintenance\Maintainer($config);
+		return new AccessManager($this->config['configurator']['developer']);
 	}
 
 	public function createConfigurator():Nette\Configurator
@@ -84,11 +88,7 @@ class App
 		}
 
 		$configurator->addParameters($this->config['parameters']);
-
-		$configurator->setDebugMode(
-			$this->isDeveloper($this->config['configurator']['developer'])
-		);
-
+		$configurator->setDebugMode($this->createAccessManager()->isDeveloper());
 		$configurator->enableDebugger($this->config['parameters']['logDir']);
 		$configurator->setTempDirectory($this->config['parameters']['tempDir']);
 
@@ -179,20 +179,6 @@ class App
 	private function expandParameters(string $key)
 	{
 		return Nette\DI\Helpers::expand($this->config[$key], $this->config['parameters']);
-	}
-
-	/**
-	 * @param array|bool $config
-	 * @return bool
-	 */
-	private function isDeveloper($config)
-	{
-		if (is_bool($config)) {
-			return $config;
-		}
-
-		$accessManager = new AccessManager($config);
-		return $accessManager->isDeveloper();
 	}
 
 }

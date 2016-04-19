@@ -14,8 +14,6 @@ class Maintainer
 
 	/** @var array */
 	private $config = [
-		'ips' => [],
-		'token' => '',
 		'jobParameter' => 'etten-maintainer-job',
 	];
 
@@ -31,11 +29,10 @@ class Maintainer
 	/** @var array */
 	private $jobs = [];
 
-	public function __construct(array $config = [])
+	public function __construct(AccessManager $accessManager)
 	{
-		$this->config = array_merge($this->config, $config);
 		$this->parameters = $_GET;
-		$this->accessManager = new AccessManager($config);
+		$this->accessManager = $accessManager;
 	}
 
 	public function addJob(string $name, \Closure $func)

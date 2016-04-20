@@ -25,12 +25,18 @@ class App
 		],
 		'configurator' => [
 			'developer' => [
+				'force' => NULL,
 				'cli' => NULL,
-				'token' => '',
 				'ips' => [
 					'127.0.0.1',
 					'::1',
 				],
+				'token' => '',
+				'tokenParameter' => 'etten-maintainer-token',
+			],
+			'maintainer' => [
+				'jobParameter' => 'etten-maintainer-job',
+				'namespace' => 'maintainer',
 			],
 			'load' => [],
 		],
@@ -68,7 +74,7 @@ class App
 
 	public function createMaintainer():Maintenance\Maintainer
 	{
-		return new Maintenance\Maintainer($this->createAccessManager());
+		return new Maintenance\Maintainer($this->createAccessManager(), $this->config['configurator']['maintainer']);
 	}
 
 	public function createAccessManager():AccessManager

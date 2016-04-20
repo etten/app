@@ -15,10 +15,8 @@ class Maintainer
 	/** @var array */
 	private $config = [
 		'jobParameter' => 'etten-maintainer-job',
+		'namespace' => 'maintainer',
 	];
-
-	/** @var string */
-	private $namespace = 'maintainer';
 
 	/** @var array */
 	private $parameters;
@@ -29,8 +27,9 @@ class Maintainer
 	/** @var array */
 	private $jobs = [];
 
-	public function __construct(AccessManager $accessManager)
+	public function __construct(AccessManager $accessManager, array $config = [])
 	{
+		$this->config = array_merge($this->config, $config);
 		$this->parameters = $_GET;
 		$this->accessManager = $accessManager;
 	}
@@ -76,7 +75,7 @@ class Maintainer
 		$parts = explode(':', $command);
 
 		$namespace = array_shift($parts);
-		if ($namespace === $this->namespace) {
+		if ($namespace === $this->config['namespace']) {
 			$job = array_shift($parts);
 			return $job === $name;
 		}

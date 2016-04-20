@@ -12,6 +12,7 @@ class AccessManager
 
 	/** @var array */
 	private $config = [
+		'force' => NULL,
 		'ips' => [],
 		'token' => '',
 		'tokenParameter' => 'etten-maintainer-token',
@@ -23,9 +24,17 @@ class AccessManager
 	/** @var array */
 	private $parameters = [];
 
-	public function __construct(array $config = [])
+	/**
+	 * @param array|bool $config
+	 */
+	public function __construct($config = [])
 	{
-		$this->config = array_merge($this->config, $config);
+		if (is_array($config)) {
+			$this->config = array_merge($this->config, $config);
+		} else {
+			$this->config['force'] = !!$config;
+		}
+
 		$this->server = $_SERVER;
 		$this->parameters = $_GET;
 	}
@@ -34,6 +43,10 @@ class AccessManager
 	{
 		if (php_sapi_name() === 'cli') {
 			return TRUE;
+		}
+
+		if ($this->config['force'] !== NULL) {
+			return $this->config['force'];
 		}
 
 		if ($this->isTokenOk()) {

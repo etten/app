@@ -42,18 +42,22 @@ class AccessManager
 
 	public function isDeveloper():bool
 	{
-		if ($this->config['force'] !== NULL) {
+		// Allow "force" option.
+		if (isset($this->config['force'])) {
 			return $this->config['force'];
 		}
 
-		if (php_sapi_name() === 'cli' && $this->config['cli'] !== NULL) {
+		// Special option for CLI-mode.
+		if (php_sapi_name() === 'cli' && isset($this->config['cli'])) {
 			return $this->config['cli'];
 		}
 
+		// Find out from secret token
 		if ($this->isTokenOk()) {
 			return TRUE;
 		}
 
+		// Find out from IP address.
 		$whiteList = (array)$this->config['ips'];
 		$remoteIp = $this->server['REMOTE_ADDR'] ?? '';
 		return in_array($remoteIp, $whiteList);

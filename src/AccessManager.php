@@ -13,6 +13,7 @@ class AccessManager
 	/** @var array */
 	private $config = [
 		'force' => NULL,
+		'cli' => NULL,
 		'ips' => [],
 		'token' => '',
 		'tokenParameter' => 'etten-maintainer-token',
@@ -41,12 +42,12 @@ class AccessManager
 
 	public function isDeveloper():bool
 	{
-		if (php_sapi_name() === 'cli') {
-			return TRUE;
-		}
-
 		if ($this->config['force'] !== NULL) {
 			return $this->config['force'];
+		}
+
+		if (php_sapi_name() === 'cli' && $this->config['cli'] !== NULL) {
+			return $this->config['cli'];
 		}
 
 		if ($this->isTokenOk()) {

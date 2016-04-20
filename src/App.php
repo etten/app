@@ -25,6 +25,7 @@ class App
 		],
 		'configurator' => [
 			'developer' => [
+				'cli' => NULL,
 				'token' => '',
 				'ips' => [
 					'127.0.0.1',

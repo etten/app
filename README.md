@@ -104,8 +104,7 @@ use Etten\App\Maintenance;
 $app = require __DIR__ . '/../app/bootstrap.php';
 
 $maintainer = $app->createMaintainer();
-
-$locker = new Maintenance\Locker($app);
+$locker = $app->createLocker();
 
 // Lock the Application
 $maintainer->addJob('disable', function () use ($locker) {

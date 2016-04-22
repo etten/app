@@ -77,6 +77,11 @@ class App
 		return new Maintenance\Maintainer($this->createAccessManager(), $this->config['configurator']['maintainer']);
 	}
 
+	public function createLocker():Maintenance\Locker
+	{
+		return new Maintenance\Locker($this);
+	}
+
 	public function createAccessManager():AccessManager
 	{
 		$this->load();

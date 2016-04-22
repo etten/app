@@ -130,6 +130,12 @@ class App
 		return $container;
 	}
 
+	public function getConfig():array
+	{
+		$this->load();
+		return $this->config;
+	}
+
 	public function run()
 	{
 		return $this

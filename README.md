@@ -105,7 +105,7 @@ $app = require __DIR__ . '/../app/bootstrap.php';
 
 $maintainer = $app->createMaintainer();
 
-$locker = new Maintenance\Locker();
+$locker = new Maintenance\Locker($app);
 
 // Lock the Application
 $maintainer->addJob('disable', function () use ($locker) {

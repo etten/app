@@ -20,10 +20,10 @@ class Cleaner
 	/** @var string */
 	private $tempDir;
 
-	public function __construct(App $app, $tempDir = '../temp')
+	public function __construct(App $app)
 	{
 		$this->app = $app;
-		$this->tempDir = $tempDir;
+		$this->tempDir = $app->getConfig()['parameters']['tempDir'];
 	}
 
 	public function clean()

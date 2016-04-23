@@ -9,11 +9,9 @@ namespace Etten\App\Console;
 
 use Nette\Caching;
 use Nette\DI;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console as SConsole;
 
-class CleanerCommand extends Command
+class CleanerCommand extends SConsole\Command\Command
 {
 
 	/** @var string */
@@ -29,7 +27,7 @@ class CleanerCommand extends Command
 		$this->containerFactory = $containerFactory;
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output)
+	protected function execute(SConsole\Input\InputInterface $input, SConsole\Output\OutputInterface $output)
 	{
 		$this->cleanApc();
 		$this->cleanApcu();
@@ -56,29 +54,28 @@ class CleanerCommand extends Command
 
 	private function cleanFiles()
 	{
-		$files = [
-			'/cache/Nette.Configurator', // Delete old Configurator - we've changed some files!
-			'/cache/latte', // Latte uses custom directory, so force delete it!
+		$directories = [
+			'/cache', // Standard cache directory.
 			'/proxies', // Kdyby/Doctrine proxies default directory must be purged.
 		];
 
-		$files = array_map(function (string $file) :string {
+		$directories = array_map(function (string $file) :string {
 			return $this->tempPath . $file;
-		}, $files);
+		}, $directories);
 
-		foreach ($files as $file) {
-			$this->deleteFile($file);
+		foreach ($directories as $directory) {
+			$this->clean($directory);
 		}
 	}
 
-	private function deleteFile(string $path)
+	private function clean(string $path)
 	{
 		if (is_file($path)) {
 			unlink($path);
 
 		} elseif (is_dir($path)) {
 			foreach (new \FilesystemIterator($path) as $item) {
-				$this->deleteFile($item);
+				$this->clean($item);
 			}
 		}
 	}

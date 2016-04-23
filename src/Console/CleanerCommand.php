@@ -26,6 +26,12 @@ class CleanerCommand extends SConsole\Command\Command
 		'/proxies', // Kdyby/Doctrine proxies default directory must be purged.
 	];
 
+	/** @var array */
+	private $ignores = [
+		'.gitignore',
+		'.gitkeep',
+	];
+
 	public function __construct(string $tempPath, callable $containerFactory)
 	{
 		parent::__construct('cache:clean');
@@ -34,12 +40,22 @@ class CleanerCommand extends SConsole\Command\Command
 	}
 
 	/**
-	 * @param string $path
+	 * @param string $directory
 	 * @return $this
 	 */
-	public function addDirectory(string $path)
+	public function addDirectory(string $directory)
 	{
-		$this->directories[] = $path;
+		$this->directories[] = $directory;
+		return $this;
+	}
+
+	/**
+	 * @param string $name
+	 * @return $this
+	 */
+	public function addIgnore(string $name)
+	{
+		$this->ignores[] = $name;
 		return $this;
 	}
 
@@ -81,6 +97,10 @@ class CleanerCommand extends SConsole\Command\Command
 
 	private function cleanFile(string $path)
 	{
+		if (in_array(basename($path), $this->ignores)) {
+			return;
+		}
+
 		if (is_file($path)) {
 			unlink($path);
 

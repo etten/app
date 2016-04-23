@@ -20,6 +20,12 @@ class CleanerCommand extends SConsole\Command\Command
 	/** @var callable */
 	private $containerFactory;
 
+	/** @var array */
+	private $directories = [
+		'/cache', // Standard cache directory.
+		'/proxies', // Kdyby/Doctrine proxies default directory must be purged.
+	];
+
 	public function __construct(string $tempPath, callable $containerFactory)
 	{
 		parent::__construct('cache:clean');
@@ -27,12 +33,22 @@ class CleanerCommand extends SConsole\Command\Command
 		$this->containerFactory = $containerFactory;
 	}
 
+	/**
+	 * @param string $path
+	 * @return $this
+	 */
+	public function addDirectory(string $path)
+	{
+		$this->directories[] = $path;
+		return $this;
+	}
+
 	protected function execute(SConsole\Input\InputInterface $input, SConsole\Output\OutputInterface $output)
 	{
 		$this->cleanApc();
 		$this->cleanApcu();
-		$this->cleanFiles();
-		$this->cleanStorage();
+		$this->cleanDirectories();
+		$this->cleanNetteStorage();
 
 		$output->writeln('Cache cleaned.');
 	}
@@ -52,35 +68,30 @@ class CleanerCommand extends SConsole\Command\Command
 		}
 	}
 
-	private function cleanFiles()
+	private function cleanDirectories()
 	{
-		$directories = [
-			'/cache', // Standard cache directory.
-			'/proxies', // Kdyby/Doctrine proxies default directory must be purged.
-		];
-
 		$directories = array_map(function (string $file) :string {
 			return $this->tempPath . $file;
-		}, $directories);
+		}, $this->directories);
 
 		foreach ($directories as $directory) {
-			$this->clean($directory);
+			$this->cleanFile($directory);
 		}
 	}
 
-	private function clean(string $path)
+	private function cleanFile(string $path)
 	{
 		if (is_file($path)) {
 			unlink($path);
 
 		} elseif (is_dir($path)) {
 			foreach (new \FilesystemIterator($path) as $item) {
-				$this->clean($item);
+				$this->cleanFile($item);
 			}
 		}
 	}
 
-	private function cleanStorage()
+	private function cleanNetteStorage()
 	{
 		$container = $this->createContainer();
 

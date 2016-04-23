@@ -16,9 +16,22 @@ class Console
 	/** @var App */
 	private $app;
 
+	/** @var bool */
+	private $autoExit = TRUE;
+
 	public function __construct(App $app)
 	{
 		$this->app = $app;
+	}
+
+	/**
+	 * @param boolean $autoExit
+	 * @return $this
+	 */
+	public function setAutoExit(boolean $autoExit)
+	{
+		$this->autoExit = $autoExit;
+		return $this;
 	}
 
 	public function run(string $command, array $parameters = [])
@@ -31,10 +44,17 @@ class Console
 		// Correctly set a command name.
 		$parameters['command'] = $command;
 
-		return $console->run(
+		$exitCode = $console->run(
 			new SConsole\Input\ArrayInput($parameters),
 			new SConsole\Output\NullOutput()
 		);
+
+		// Force auto-exit (it's true by default in Symfony/Console, but false in Kdyby/Console).
+		if ($this->autoExit && $exitCode) {
+			exit($exitCode);
+		}
+
+		return $exitCode;
 	}
 
 }

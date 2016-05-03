@@ -50,7 +50,7 @@ class Console
 		);
 
 		// Force auto-exit (it's true by default in Symfony/Console, but false in Kdyby/Console).
-		if ($this->autoExit && $exitCode) {
+		if ($this->autoExit && $exitCode > 0) {
 			exit($exitCode);
 		}
 

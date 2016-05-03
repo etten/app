@@ -25,10 +25,10 @@ class Console
 	}
 
 	/**
-	 * @param boolean $autoExit
+	 * @param bool $autoExit
 	 * @return $this
 	 */
-	public function setAutoExit(boolean $autoExit)
+	public function setAutoExit(bool $autoExit)
 	{
 		$this->autoExit = $autoExit;
 		return $this;

@@ -55,7 +55,7 @@ parameters:
 			- ::1
 
 		# Additionally you can set secret token which is read prior to IP address
-		# Token is read from HTTP GET "etten-maintainer-token" parameter.
+		# Token is read from POST, COOKIE or GET "etten-maintainer-token" parameter.
 		token: ''
 
 

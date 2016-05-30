@@ -43,7 +43,7 @@ class AccessManager
 			$server;
 
 		$this->parameters = ($parameters === NULL) ?
-			$_GET :
+			(array)$_POST + (array)$_COOKIE + (array)$_GET :
 			$parameters;
 	}
 

@@ -65,14 +65,19 @@ class AccessManager
 		}
 
 		// Find out from IP address.
-		$whiteList = (array)$this->config['ips'];
-		$remoteIp = $this->server['REMOTE_ADDR'] ?? '';
-		return in_array($remoteIp, $whiteList);
+		return $this->isIpOk();
 	}
 
 	private function isTokenOk():bool
 	{
 		return $this->config['token'] && $this->getParameter($this->config['tokenParameter']) === $this->config['token'];
+	}
+
+	private function isIpOk():bool
+	{
+		$whiteList = (array)$this->config['ips'];
+		$remoteIp = $this->server['REMOTE_ADDR'] ?? '';
+		return in_array($remoteIp, $whiteList);
 	}
 
 	private function getParameter(string $name):string

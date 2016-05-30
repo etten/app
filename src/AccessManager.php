@@ -27,8 +27,10 @@ class AccessManager
 
 	/**
 	 * @param array|bool $config
+	 * @param array|null $server
+	 * @param array|null $parameters
 	 */
-	public function __construct($config = [])
+	public function __construct($config = [], array $server = NULL, array $parameters = NULL)
 	{
 		if (is_array($config)) {
 			$this->config = array_merge($this->config, $config);
@@ -36,8 +38,13 @@ class AccessManager
 			$this->config['force'] = !!$config;
 		}
 
-		$this->server = $_SERVER;
-		$this->parameters = $_GET;
+		$this->server = ($server === NULL) ?
+			$_SERVER :
+			$server;
+
+		$this->parameters = ($parameters === NULL) ?
+			$_GET :
+			$parameters;
 	}
 
 	public function isDeveloper():bool

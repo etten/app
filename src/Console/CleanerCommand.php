@@ -7,6 +7,7 @@
 
 namespace Etten\App\Console;
 
+use Kdyby\Doctrine;
 use Nette\Caching;
 use Nette\DI;
 use Symfony\Component\Console as SConsole;
@@ -64,7 +65,7 @@ class CleanerCommand extends SConsole\Command\Command
 		$this->cleanApc();
 		$this->cleanApcu();
 		$this->cleanDirectories();
-		$this->cleanNetteStorage();
+		$this->cleanServices();
 
 		$output->writeln('Cache cleaned.');
 	}
@@ -111,16 +112,23 @@ class CleanerCommand extends SConsole\Command\Command
 		}
 	}
 
-	private function cleanNetteStorage()
+	private function cleanServices()
 	{
 		$container = $this->createContainer();
 
 		/** @var Caching\IStorage $storage */
-		$storage = $container->getByType(Caching\IStorage::class);
+		$storage = $container->getByType(Caching\IStorage::class, FALSE);
+		if ($storage) {
+			$storage->clean([
+				Caching\Cache::ALL => TRUE,
+			]);
+		}
 
-		$storage->clean([
-			Caching\Cache::ALL => TRUE,
-		]);
+		/** @var Doctrine\Tools\CacheCleaner $cacheCleaner */
+		$cacheCleaner = $container->getByType(Doctrine\Tools\CacheCleaner::class, FALSE);
+		if ($cacheCleaner) {
+			$cacheCleaner->invalidate();
+		}
 	}
 
 	private function createContainer():DI\Container

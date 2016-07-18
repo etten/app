@@ -51,7 +51,7 @@ class Maintainer
 		}
 	}
 
-	public function isJob(string $name):bool
+	public function isJob(string $name) :bool
 	{
 		if (php_sapi_name() === 'cli') {
 			return $this->isCliJob($name);
@@ -60,7 +60,7 @@ class Maintainer
 		}
 	}
 
-	private function isCliJob(string $name):bool
+	private function isCliJob(string $name) :bool
 	{
 		$argv = $_SERVER['argv'];
 
@@ -83,7 +83,7 @@ class Maintainer
 		return FALSE;
 	}
 
-	private function isHttpJob(string $name):bool
+	private function isHttpJob(string $name) :bool
 	{
 		if (!$this->accessManager->isDeveloper()) {
 			return FALSE;
@@ -92,7 +92,7 @@ class Maintainer
 		return $this->getParameter($this->config['jobParameter']) === $name;
 	}
 
-	private function getParameter(string $name):string
+	private function getParameter(string $name) :string
 	{
 		return $this->parameters[$name] ?? '';
 	}

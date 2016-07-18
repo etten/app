@@ -17,7 +17,7 @@ abstract class ContainerTestCase extends TestCase
 	/** @var Nette\DI\Container */
 	private static $container;
 
-	public function getContainer():Nette\DI\Container
+	public function getContainer() :Nette\DI\Container
 	{
 		if (!self::$container) {
 			self::$container = self::createContainer();
@@ -26,7 +26,7 @@ abstract class ContainerTestCase extends TestCase
 		return self::$container;
 	}
 
-	private static function createContainer():Nette\DI\Container
+	private static function createContainer() :Nette\DI\Container
 	{
 		// Suppress DIC warnings (headers already sent etc.).
 		return self::ignoreWarnings(function () {

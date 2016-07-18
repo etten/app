@@ -23,7 +23,7 @@ class Locker
 		$this->tempDir = $app->getConfig()['parameters']['tempDir'];
 	}
 
-	public function isLocked():bool
+	public function isLocked() :bool
 	{
 		return is_file($this->tempDir . $this->lockFile);
 	}

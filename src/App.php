@@ -66,39 +66,39 @@ class App
 		$this->rootDir = $rootDir;
 	}
 
-	public function addBootstrapFile(string $file, string $name = ''):App
+	public function addBootstrapFile(string $file, string $name = '') :App
 	{
 		return $this->addFile($this->bootstrapFiles, $file, $name);
 	}
 
-	public function addConfigFile(string $file, string $name = ''):App
+	public function addConfigFile(string $file, string $name = '') :App
 	{
 		return $this->addFile($this->configFiles, $file, $name);
 	}
 
-	public function addExtension(Extension $extension):App
+	public function addExtension(Extension $extension) :App
 	{
 		$this->extensions[] = $extension;
 		return $this;
 	}
 
-	public function createMaintainer():Maintenance\Maintainer
+	public function createMaintainer() :Maintenance\Maintainer
 	{
 		return new Maintenance\Maintainer($this->createAccessManager(), $this->config['configurator']['maintainer']);
 	}
 
-	public function createLocker():Maintenance\Locker
+	public function createLocker() :Maintenance\Locker
 	{
 		return new Maintenance\Locker($this);
 	}
 
-	public function createAccessManager():AccessManager
+	public function createAccessManager() :AccessManager
 	{
 		$this->load();
 		return new AccessManager($this->config['configurator']['developer']);
 	}
 
-	public function createConfigurator():Nette\Configurator
+	public function createConfigurator() :Nette\Configurator
 	{
 		$this->load();
 
@@ -123,7 +123,7 @@ class App
 		return $configurator;
 	}
 
-	public function createContainer():Nette\DI\Container
+	public function createContainer() :Nette\DI\Container
 	{
 		$configurator = $this->createConfigurator();
 
@@ -145,7 +145,7 @@ class App
 		return $container;
 	}
 
-	public function getConfig():array
+	public function getConfig() :array
 	{
 		$this->load();
 		return $this->config;
@@ -159,7 +159,7 @@ class App
 			->run();
 	}
 
-	private function addFile(& $array, $file, $name):App
+	private function addFile(& $array, $file, $name) :App
 	{
 		if ($name) {
 			$array[$name] = $file;

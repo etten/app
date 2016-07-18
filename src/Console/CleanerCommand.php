@@ -30,24 +30,14 @@ class CleanerCommand extends SConsole\Command\Command
 		$this->containerFactory = $containerFactory;
 	}
 
-	/**
-	 * @param array $purge
-	 * @return $this
-	 */
 	public function setPurge(array $purge)
 	{
 		$this->purge = $purge;
-		return $this;
 	}
 
-	/**
-	 * @param array $ignore
-	 * @return $this
-	 */
 	public function setIgnore(array $ignore)
 	{
 		$this->ignore = $ignore;
-		return $this;
 	}
 
 	protected function execute(SConsole\Input\InputInterface $input, SConsole\Output\OutputInterface $output)

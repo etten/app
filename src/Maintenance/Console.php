@@ -24,14 +24,9 @@ class Console
 		$this->app = $app;
 	}
 
-	/**
-	 * @param bool $autoExit
-	 * @return $this
-	 */
 	public function setAutoExit(bool $autoExit)
 	{
 		$this->autoExit = $autoExit;
-		return $this;
 	}
 
 	public function run(string $command, array $parameters = [])

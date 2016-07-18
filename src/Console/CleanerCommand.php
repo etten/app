@@ -15,48 +15,38 @@ use Symfony\Component\Console as SConsole;
 class CleanerCommand extends SConsole\Command\Command
 {
 
-	/** @var string */
-	private $tempPath;
-
 	/** @var callable */
 	private $containerFactory;
 
 	/** @var array */
-	private $directories = [
-		'/cache', // Standard cache directory.
-		'/proxies', // Kdyby/Doctrine proxies default directory must be purged.
-	];
+	private $purge = [];
 
 	/** @var array */
-	private $ignores = [
-		'.gitignore',
-		'.gitkeep',
-	];
+	private $ignore = [];
 
-	public function __construct(string $tempPath, callable $containerFactory)
+	public function __construct(callable $containerFactory)
 	{
 		parent::__construct('cache:clean');
-		$this->tempPath = $tempPath;
 		$this->containerFactory = $containerFactory;
 	}
 
 	/**
-	 * @param string $directory
+	 * @param array $purge
 	 * @return $this
 	 */
-	public function addDirectory(string $directory)
+	public function setPurge(array $purge)
 	{
-		$this->directories[] = $directory;
+		$this->purge = $purge;
 		return $this;
 	}
 
 	/**
-	 * @param string $name
+	 * @param array $ignore
 	 * @return $this
 	 */
-	public function addIgnore(string $name)
+	public function setIgnore(array $ignore)
 	{
-		$this->ignores[] = $name;
+		$this->ignore = $ignore;
 		return $this;
 	}
 
@@ -95,18 +85,14 @@ class CleanerCommand extends SConsole\Command\Command
 
 	private function cleanDirectories()
 	{
-		$directories = array_map(function (string $file) :string {
-			return $this->tempPath . $file;
-		}, $this->directories);
-
-		foreach ($directories as $directory) {
+		foreach ($this->purge as $directory) {
 			$this->cleanFile($directory);
 		}
 	}
 
 	private function cleanFile(string $path)
 	{
-		if (in_array(basename($path), $this->ignores)) {
+		if (in_array(basename($path), $this->ignore)) {
 			return;
 		}
 

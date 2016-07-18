@@ -19,8 +19,13 @@ class CleanerExtension extends NDI\CompilerExtension
 
 		$builder->addDefinition($this->prefix('continueCommand'))
 			->setClass(Console\CleanerCommand::class, [
-				$builder->parameters['tempDir'],
 				new NDI\Statement('function () { return ?; }', ['@Nette\DI\Container']),
+			])
+			->addSetup('setPurge', [
+				new NDI\Statement('?->getConfig()[\'cleaner\'][\'purge\']', ['@Etten\App\Configurator']),
+			])
+			->addSetup('setIgnore', [
+				new NDI\Statement('?->getConfig()[\'cleaner\'][\'ignore\']', ['@Etten\App\Configurator']),
 			])
 			->addTag('kdyby.console.command');
 	}

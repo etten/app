@@ -66,6 +66,17 @@ configurator:
 	load:
 		- %appDir%
 
+	# CleanerCommand configuration (cache invalidation).
+	cleaner:
+		# Directories to purge.
+		# Defaults are %tempDir%/cache, %tempDir%/proxies
+		purge:
+			- %tempDir%/custom-cache-directory
+
+		# Ignore files patterns (like git).
+		# Defaults are .gitignore, .gitkeep
+		ignore:
+			- .notempty
 ```
 
 ## Maintenance

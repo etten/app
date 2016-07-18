@@ -39,6 +39,16 @@ class App
 				'namespace' => 'maintainer',
 			],
 			'load' => [],
+			'cleaner' => [
+				'purge' => [
+					'%tempDir%/cache',
+					'%tempDir%/proxies',
+				],
+				'ignore' => [
+					'.gitignore',
+					'.gitkeep',
+				],
+			]
 		],
 	];
 

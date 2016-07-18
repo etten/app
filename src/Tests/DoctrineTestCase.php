@@ -3,7 +3,6 @@
 namespace Etten\App\Tests;
 
 use Doctrine\ORM;
-use Nette;
 
 /**
  * @property-read ORM\EntityManager $em

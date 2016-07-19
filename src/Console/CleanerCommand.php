@@ -115,7 +115,7 @@ class CleanerCommand extends SConsole\Command\Command
 		}
 	}
 
-	private function createContainer() :DI\Container
+	private function createContainer(): DI\Container
 	{
 		return call_user_func($this->containerFactory);
 	}

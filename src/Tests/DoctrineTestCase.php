@@ -13,7 +13,7 @@ abstract class DoctrineTestCase extends ContainerTestCase
 	/** @var ORM\EntityManager */
 	private $em;
 
-	public function getEm() :ORM\EntityManager
+	public function getEm(): ORM\EntityManager
 	{
 		if (!$this->em) {
 			$this->em = $this->container

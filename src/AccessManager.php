@@ -47,7 +47,7 @@ class AccessManager
 			$parameters;
 	}
 
-	public function isDeveloper() :bool
+	public function isDeveloper(): bool
 	{
 		// Allow "force" option.
 		if (isset($this->config['force'])) {
@@ -68,19 +68,19 @@ class AccessManager
 		return $this->isIpOk();
 	}
 
-	private function isTokenOk() :bool
+	private function isTokenOk(): bool
 	{
 		return $this->config['token'] && $this->getParameter($this->config['tokenParameter']) === $this->config['token'];
 	}
 
-	private function isIpOk() :bool
+	private function isIpOk(): bool
 	{
 		$whiteList = (array)$this->config['ips'];
 		$remoteIp = $this->server['REMOTE_ADDR'] ?? '';
 		return in_array($remoteIp, $whiteList);
 	}
 
-	private function getParameter(string $name) :string
+	private function getParameter(string $name): string
 	{
 		return $this->parameters[$name] ?? '';
 	}

@@ -16,9 +16,9 @@ abstract class PresenterTestCase extends ContainerTestCase
 	/**
 	 * @return string Fully Qualified Presenter name (Front:Homepage)
 	 */
-	abstract protected function getPresenterName() :string;
+	abstract protected function getPresenterName(): string;
 
-	public function getPresenter() :Nette\Application\IPresenter
+	public function getPresenter(): Nette\Application\IPresenter
 	{
 		if (!$this->presenter) {
 			$this->presenter = $this->getPresenterFactory()
@@ -38,7 +38,7 @@ abstract class PresenterTestCase extends ContainerTestCase
 		array $post = [],
 		array $files = [],
 		array $flags = []
-	) :Nette\Application\IResponse
+	): Nette\Application\IResponse
 	{
 		$request = new Nette\Application\Request($this->getPresenterName(), $method, $params, $post, $files, $flags);
 		return $this->getPresenter()->run($request);
@@ -49,7 +49,7 @@ abstract class PresenterTestCase extends ContainerTestCase
 		string $method = 'GET',
 		array $params = [],
 		array $post = []
-	) :Nette\Application\IResponse
+	): Nette\Application\IResponse
 	{
 		return $this->runPresenter($method, ['do' => $name] + $params, $post);
 	}
@@ -59,7 +59,7 @@ abstract class PresenterTestCase extends ContainerTestCase
 		string $method = 'GET',
 		array $params = [],
 		array $post = []
-	) :Nette\Application\IResponse
+	): Nette\Application\IResponse
 	{
 		return $this->runPresenter($method, ['action' => $action] + $params, $post);
 	}

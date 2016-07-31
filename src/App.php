@@ -199,6 +199,10 @@ class App
 			}
 		}
 
+        foreach ($this->extensions as $extension) {
+            $extension->onAppLoad($this->config);
+        }
+
 		$this->loaded = TRUE;
 	}
 

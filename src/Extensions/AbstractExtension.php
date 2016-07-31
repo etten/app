@@ -12,6 +12,10 @@ use Nette;
 abstract class AbstractExtension implements Extension
 {
 
+	public function onAppLoad(array $config)
+	{
+	}
+
 	public function onConfiguratorCreate(Nette\Configurator $configurator, array $config)
 	{
 	}

@@ -7,7 +7,7 @@ use Nette;
 interface Extension
 {
 
-    public function onAppLoad(array $config);
+	public function onAppLoad(array $config);
 
 	public function onConfiguratorCreate(Nette\Configurator $configurator, array $config);
 

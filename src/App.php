@@ -48,7 +48,7 @@ class App
 					'.gitignore',
 					'.gitkeep',
 				],
-			]
+			],
 		],
 	];
 
@@ -199,9 +199,9 @@ class App
 			}
 		}
 
-        foreach ($this->extensions as $extension) {
-            $extension->onAppLoad($this->config);
-        }
+		foreach ($this->extensions as $extension) {
+			$extension->onAppLoad($this->config);
+		}
 
 		$this->loaded = TRUE;
 	}

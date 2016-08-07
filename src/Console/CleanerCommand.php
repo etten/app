@@ -108,6 +108,18 @@ class CleanerCommand extends SConsole\Command\Command
 			]);
 		}
 
+		/** @var \Memcache $memcache */
+		$memcache = $container->getByType(\Memcache::class, FALSE);
+		if ($memcache) {
+			$memcache->flush();
+		}
+
+		/** @var \Memcached $memcached */
+		$memcached = $container->getByType(\Memcached::class, FALSE);
+		if ($memcached) {
+			$memcached->flush();
+		}
+
 		/** @var Doctrine\Tools\CacheCleaner $cacheCleaner */
 		$cacheCleaner = $container->getByType(Doctrine\Tools\CacheCleaner::class, FALSE);
 		if ($cacheCleaner) {

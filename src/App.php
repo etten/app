@@ -51,8 +51,6 @@ class App
 				],
 				'cleaners' => [
 					Cleaner\OpCacheCleaner::class,
-					Cleaner\ApcCleaner::class,
-					Cleaner\ApcuCleaner::class,
 					Cleaner\StorageCleaner::class,
 					Cleaner\DoctrineCleaner::class,
 				],

@@ -13,7 +13,7 @@ class DoctrineCleaner extends ServiceCleaner
 			$cleaner->invalidate();
 		};
 
-		$this->doCleanByType(call_user_func($container), Doctrine\Tools\CacheCleaner::class, $closure);
+		$this->doCleanByType(call_user_func($container), 'Kdyby\Doctrine\Tools\CacheCleaner', $closure);
 	}
 
 }

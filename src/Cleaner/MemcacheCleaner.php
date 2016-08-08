@@ -11,7 +11,7 @@ class MemcacheCleaner extends ServiceCleaner
 			$memcache->flush();
 		};
 
-		$this->doCleanByType(call_user_func($container), \Memcache::class, $closure);
+		$this->doCleanByType(call_user_func($container), 'Memcache', $closure);
 	}
 
 }

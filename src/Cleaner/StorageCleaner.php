@@ -15,7 +15,7 @@ class StorageCleaner extends ServiceCleaner
 			]);
 		};
 
-		$this->doCleanByType(call_user_func($container), Caching\IStorage::class, $closure);
+		$this->doCleanByType(call_user_func($container), 'Nette\Caching\IStorage', $closure);
 	}
 
 }

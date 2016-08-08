@@ -53,8 +53,6 @@ class App
 					Cleaner\OpCacheCleaner::class,
 					Cleaner\ApcCleaner::class,
 					Cleaner\ApcuCleaner::class,
-					Cleaner\MemcacheCleaner::class,
-					Cleaner\MemcachedCleaner::class,
 					Cleaner\StorageCleaner::class,
 					Cleaner\DoctrineCleaner::class,
 				],

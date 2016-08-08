@@ -4,6 +4,7 @@ namespace Etten\App;
 
 use Etten\App\Extensions\Extension;
 use Etten\App\Maintenance;
+use Etten\App\Cleaner;
 use Nette;
 
 class App
@@ -47,6 +48,15 @@ class App
 				'ignore' => [
 					'.gitignore',
 					'.gitkeep',
+				],
+				'cleaners' => [
+					Cleaner\OpCacheCleaner::class,
+					Cleaner\ApcCleaner::class,
+					Cleaner\ApcuCleaner::class,
+					Cleaner\MemcacheCleaner::class,
+					Cleaner\MemcachedCleaner::class,
+					Cleaner\StorageCleaner::class,
+					Cleaner\DoctrineCleaner::class,
 				],
 			],
 		],

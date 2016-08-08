@@ -17,7 +17,7 @@ class CleanerExtension extends NDI\CompilerExtension
 	{
 		$builder = $this->getContainerBuilder();
 
-		$builder->addDefinition($this->prefix('continueCommand'))
+		$builder->addDefinition($this->prefix('cleanerCommand'))
 			->setClass(Console\CleanerCommand::class, [
 				new NDI\Statement('function () { return ?; }', ['@Nette\DI\Container']),
 			])
@@ -26,6 +26,9 @@ class CleanerExtension extends NDI\CompilerExtension
 			])
 			->addSetup('setIgnore', [
 				new NDI\Statement('?->getConfig()[\'cleaner\'][\'ignore\']', ['@Etten\App\Configurator']),
+			])
+			->addSetup('setCleaners', [
+				new NDI\Statement('?->getConfig()[\'cleaner\'][\'cleaners\']', ['@Etten\App\Configurator']),
 			])
 			->addTag('kdyby.console.command');
 	}

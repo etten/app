@@ -7,8 +7,7 @@
 
 namespace Etten\App\Console;
 
-use Kdyby\Doctrine;
-use Nette\Caching;
+use Etten\App\Cleaner\Cleaner;
 use Nette\DI;
 use Symfony\Component\Console as SConsole;
 
@@ -18,11 +17,17 @@ class CleanerCommand extends SConsole\Command\Command
 	/** @var callable */
 	private $containerFactory;
 
-	/** @var array */
+	/** @var string[] */
 	private $purge = [];
 
-	/** @var array */
+	/** @var string[] */
 	private $ignore = [];
+
+	/** @var string[] */
+	private $cleaners = [];
+
+	/** @var DI\Container|null */
+	private $container;
 
 	public function __construct(callable $containerFactory)
 	{
@@ -40,37 +45,34 @@ class CleanerCommand extends SConsole\Command\Command
 		$this->ignore = $ignore;
 	}
 
+	public function setCleaners(array $cleaners)
+	{
+		$this->cleaners = $cleaners;
+	}
+
+	public function getContainer(): DI\Container
+	{
+		if ($this->container === NULL) {
+			$this->container = call_user_func($this->containerFactory);
+		}
+
+		return $this->container;
+	}
+
 	protected function execute(SConsole\Input\InputInterface $input, SConsole\Output\OutputInterface $output)
 	{
-		$this->cleanApc();
-		$this->cleanApcu();
-		$this->cleanOpCache();
 		$this->cleanDirectories();
-		$this->cleanServices();
+
+		foreach ($this->cleaners as $cleaner) {
+			$class = new $cleaner;
+			if ($class instanceof Cleaner) {
+				$class->clean([$this, 'getContainer']);
+			} else {
+				throw new \Exception(sprintf('%s expected, %s given.', Cleaner::class, get_class($class)));
+			}
+		}
 
 		$output->writeln('Cache cleaned.');
-	}
-
-	private function cleanApc()
-	{
-		if (function_exists('apc_clear_cache')) {
-			apc_clear_cache();
-			apc_clear_cache('user');
-		}
-	}
-
-	private function cleanApcu()
-	{
-		if (function_exists('apcu_clear_cache')) {
-			apcu_clear_cache();
-		}
-	}
-
-	private function cleanOpCache()
-	{
-		if (function_exists('opcache_reset')) {
-			opcache_reset();
-		}
 	}
 
 	private function cleanDirectories()
@@ -94,42 +96,6 @@ class CleanerCommand extends SConsole\Command\Command
 				$this->cleanFile($item);
 			}
 		}
-	}
-
-	private function cleanServices()
-	{
-		$container = $this->createContainer();
-
-		/** @var Caching\IStorage $storage */
-		$storage = $container->getByType(Caching\IStorage::class, FALSE);
-		if ($storage) {
-			$storage->clean([
-				Caching\Cache::ALL => TRUE,
-			]);
-		}
-
-		/** @var \Memcache $memcache */
-		$memcache = $container->getByType(\Memcache::class, FALSE);
-		if ($memcache) {
-			$memcache->flush();
-		}
-
-		/** @var \Memcached $memcached */
-		$memcached = $container->getByType(\Memcached::class, FALSE);
-		if ($memcached) {
-			$memcached->flush();
-		}
-
-		/** @var Doctrine\Tools\CacheCleaner $cacheCleaner */
-		$cacheCleaner = $container->getByType(Doctrine\Tools\CacheCleaner::class, FALSE);
-		if ($cacheCleaner) {
-			$cacheCleaner->invalidate();
-		}
-	}
-
-	private function createContainer(): DI\Container
-	{
-		return call_user_func($this->containerFactory);
 	}
 
 }

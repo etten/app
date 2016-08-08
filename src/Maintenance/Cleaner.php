@@ -33,6 +33,7 @@ class Cleaner
 		$command = new Console\CleanerCommand([$this->app, 'createContainer']);
 		$command->setPurge($this->config['purge']);
 		$command->setIgnore($this->config['ignore']);
+		$command->setCleaners($this->config['cleaners']);
 
 		return $command->run(
 			new SConsole\Input\ArrayInput([]),

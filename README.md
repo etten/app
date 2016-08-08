@@ -73,10 +73,15 @@ configurator:
 		purge:
 			- %tempDir%/custom-cache-directory
 
-		# Ignore files patterns (like git).
+		# Ignore file patterns (like git).
 		# Defaults are .gitignore, .gitkeep
 		ignore:
 			- .notempty
+
+		# Cleaners are triggered when cache:clean commmand is executed.
+		# See \Etten\App\App for defaults. 
+		cleaners:
+			- Etten\App\Cleaner\CleanerImpl
 ```
 
 ## Maintenance

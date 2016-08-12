@@ -67,6 +67,9 @@ class App
 	/** @var bool */
 	private $loaded = FALSE;
 
+	/** @var Nette\DI\Container|null */
+	private $container;
+
 	public function __construct(string $rootDir)
 	{
 		$this->rootDir = $rootDir;
@@ -86,6 +89,15 @@ class App
 	{
 		$this->extensions[] = $extension;
 		return $this;
+	}
+
+	public function getContainer(): Nette\DI\Container
+	{
+		if ($this->container === NULL) {
+			$this->container = $this->createContainer();
+		}
+
+		return $this->container;
 	}
 
 	public function createMaintainer(): Maintenance\Maintainer
@@ -160,7 +172,7 @@ class App
 	public function run()
 	{
 		return $this
-			->createContainer()
+			->getContainer()
 			->getByType(Nette\Application\Application::class)
 			->run();
 	}

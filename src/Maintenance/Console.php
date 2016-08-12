@@ -31,7 +31,7 @@ class Console
 
 	public function run(string $command, array $parameters = [])
 	{
-		$container = $this->app->createContainer();
+		$container = $this->app->getContainer();
 
 		/** @var SConsole\Application $console */
 		$console = $container->getByType(SConsole\Application::class);

@@ -30,7 +30,7 @@ class Cleaner
 
 	public function clean()
 	{
-		$command = new Console\CleanerCommand([$this->app, 'createContainer']);
+		$command = new Console\CleanerCommand([$this->app, 'getContainer']);
 		$command->setPurge($this->config['purge']);
 		$command->setIgnore($this->config['ignore']);
 		$command->setCleaners($this->config['cleaners']);

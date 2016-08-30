@@ -13,32 +13,39 @@ class Locker
 {
 
 	/** @var string */
-	private $tempDir;
-
-	/** @var string */
 	private $lockFile = '/.maintenance-lock';
+
+	/** @var int Wait time in seconds after a lock. */
+	private $lockDelay = 0;
+
+	/** @var int Wait time in seconds before an unlock. */
+	private $unlockDelay = 0;
 
 	public function __construct(App $app)
 	{
-		$this->tempDir = $app->getConfig()['parameters']['tempDir'];
+		$this->lockFile = $app->getConfig()['configurator']['locker']['lockFile'];
+		$this->lockDelay = $app->getConfig()['configurator']['locker']['lockDelay'];
+		$this->unlockDelay = $app->getConfig()['configurator']['locker']['unlockDelay'];
 	}
 
 	public function isLocked(): bool
 	{
-		return is_file($this->tempDir . $this->lockFile);
+		return is_file($this->lockFile);
 	}
 
 	public function lock()
 	{
 		if (!$this->isLocked()) {
-			file_put_contents($this->tempDir . $this->lockFile, NULL);
+			file_put_contents($this->lockFile, NULL);
+			sleep($this->lockDelay);
 		}
 	}
 
 	public function unlock()
 	{
 		if ($this->isLocked()) {
-			unlink($this->tempDir . $this->lockFile);
+			sleep($this->unlockDelay);
+			unlink($this->lockFile);
 		}
 	}
 

@@ -2,9 +2,9 @@
 
 namespace Etten\App;
 
+use Etten\App\Cleaner;
 use Etten\App\Extensions\Extension;
 use Etten\App\Maintenance;
-use Etten\App\Cleaner;
 use Nette;
 
 class App
@@ -38,6 +38,11 @@ class App
 			'maintainer' => [
 				'jobParameter' => 'etten-maintainer-job',
 				'namespace' => 'maintainer',
+			],
+			'locker' => [
+				'lockFile' => '%tempDir%/.maintenance-lock',
+				'lockDelay' => 3,
+				'unlockDelay' => 0,
 			],
 			'load' => [],
 			'cleaner' => [
